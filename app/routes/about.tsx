@@ -14,7 +14,7 @@ function ResearchBlock({ area, index }: { area: ResearchArea; index: number }) {
   const isEven = index % 2 === 0;
 
   return (
-    <div className="research-card">
+    <div className="research-card relative">
       {/* Separator dot */}
       {index > 0 && (
         <div className="flex justify-center mb-16">
@@ -22,7 +22,56 @@ function ResearchBlock({ area, index }: { area: ResearchArea; index: number }) {
         </div>
       )}
 
-      <div className={`max-w-3xl ${isEven ? "mr-auto" : "ml-auto"}`}>
+      {/* Abstract color shapes */}
+      <div
+        className={`hidden lg:block absolute ${
+          isEven ? "right-0" : "left-0"
+        } top-0 w-52 h-72 pointer-events-none`}
+      >
+        {/* Primary shape */}
+        <div
+          className={`absolute ${
+            [
+              "w-32 h-32 rounded-full bg-brand-terracotta/[0.12] top-2 right-2",
+              "w-40 h-24 rounded-[2.5rem] bg-brand-coral/[0.15] top-0 left-0 rotate-6",
+              "w-24 h-40 rounded-[3rem] bg-brand-gold/[0.14] top-0 right-6 -rotate-3",
+              "w-36 h-36 rounded-[40%_60%_55%_45%] bg-brand-rose/[0.12] top-0 left-0 rotate-12",
+              "w-32 h-28 rounded-[50%_50%_45%_55%/60%_40%_60%_40%] bg-brand-terracotta/[0.10] top-4 right-0 -rotate-6",
+              "w-40 h-32 rounded-[3.5rem] bg-brand-gold/[0.13] top-0 left-2 rotate-3",
+            ][index]
+          }`}
+        />
+
+        {/* Secondary shape */}
+        <div
+          className={`absolute ${
+            [
+              "w-16 h-16 rounded-full bg-brand-gold/[0.12] bottom-14 right-20",
+              "w-20 h-14 rounded-[1.5rem] bg-brand-terracotta/[0.10] bottom-10 left-28 -rotate-12",
+              "w-14 h-20 rounded-full bg-brand-coral/[0.12] bottom-8 right-0 rotate-6",
+              "w-18 h-18 rounded-[45%_55%_50%_50%] bg-brand-gold/[0.10] bottom-12 left-24 rotate-45",
+              "w-16 h-12 rounded-[1.5rem] bg-brand-rose/[0.12] bottom-10 right-20 -rotate-8",
+              "w-14 h-14 rounded-full bg-brand-terracotta/[0.10] bottom-14 left-32 rotate-12",
+            ][index]
+          }`}
+        />
+
+        {/* Tertiary dot */}
+        <div
+          className={`absolute rounded-full ${
+            [
+              "w-6 h-6 bg-brand-coral/[0.18] bottom-28 right-10",
+              "w-5 h-5 bg-brand-gold/[0.20] bottom-24 left-10",
+              "w-7 h-7 bg-brand-terracotta/[0.15] bottom-20 right-20",
+              "w-5 h-5 bg-brand-coral/[0.16] bottom-30 left-10",
+              "w-6 h-6 bg-brand-gold/[0.18] bottom-24 right-6",
+              "w-7 h-7 bg-brand-rose/[0.15] bottom-28 left-20",
+            ][index]
+          }`}
+        />
+      </div>
+
+      <div className={`relative max-w-3xl ${isEven ? "mr-auto" : "ml-auto"}`}>
         {/* Question */}
         <p className="font-body text-sm uppercase tracking-[0.15em] text-brand-terracotta mb-3">
           {area.question}
