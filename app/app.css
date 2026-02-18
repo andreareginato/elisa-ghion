@@ -1,15 +1,84 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-heading: "Playfair Display", Georgia, serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Primary - rich, alive */
+  --color-brand-terracotta: #D4654A;
+  --color-brand-terracottaLight: #E8876E;
+  --color-brand-coral: #F0A08C;
+
+  /* Warm neutrals */
+  --color-brand-cream: #FBF6F0;
+  --color-brand-sand: #F0E6D8;
+
+  /* Dark tones */
+  --color-brand-charcoal: #1E1E1E;
+  --color-brand-charcoalLight: #3D3D3D;
+
+  /* Accents */
+  --color-brand-warmGray: #9A8E84;
+  --color-brand-gold: #C9A96E;
+  --color-brand-goldLight: #E0C98F;
+  --color-brand-rose: #C46B7C;
+
+  /* Base */
+  --color-brand-white: #FEFEFE;
+  --color-brand-black: #141414;
 }
 
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
+html {
+  scroll-behavior: smooth;
+}
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+::selection {
+  background: rgba(212, 101, 74, 0.25);
+}
+
+/* ─── Hero: Flowing Gradient ─── */
+.hero-gradient {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background:
+    radial-gradient(ellipse 50% 40% at 20% 50%, rgba(212, 101, 74, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 50% at 80% 30%, rgba(196, 107, 124, 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 45% at 50% 80%, rgba(201, 169, 110, 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 60% 40%, rgba(240, 160, 140, 0.08) 0%, transparent 60%);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  animation: gradient-drift 25s ease-in-out infinite alternate;
+  will-change: background-position;
+}
+
+@keyframes gradient-drift {
+  0% { background-position: 0% 0%; }
+  25% { background-position: 50% 30%; }
+  50% { background-position: 100% 50%; }
+  75% { background-position: 30% 80%; }
+  100% { background-position: 100% 100%; }
+}
+
+/* Subtle grain texture overlay for sophistication */
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ─── Scroll indicator ─── */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(8px); opacity: 0.4; }
+}
+
+.scroll-indicator {
+  animation: scroll-bounce 2s ease-in-out infinite;
 }

@@ -1,13 +1,38 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { Navigation } from "~/components/navigation";
+import { HeroSection } from "~/components/hero/hero-section";
+import { AboutSection } from "~/components/about-section";
+import { GallerySection } from "~/components/gallery-section";
+import { WorkshopsSection } from "~/components/workshops/workshops-section";
+import { Footer } from "~/components/footer";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Elisa Ghion — Contact Improvisation" },
+    {
+      name: "description",
+      content:
+        "Elisa Ghion is a contact improvisation teacher and performer. Explore workshops, intensives, and the art of movement dialogue.",
+    },
+    { property: "og:title", content: "Elisa Ghion — Contact Improvisation" },
+    {
+      property: "og:description",
+      content:
+        "Explore workshops, intensives, and the art of movement dialogue with Elisa Ghion.",
+    },
+    { property: "og:type", content: "website" },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <>
+      <Navigation />
+      <HeroSection />
+      <AboutSection />
+      <GallerySection />
+      <WorkshopsSection />
+      <Footer />
+    </>
+  );
 }
