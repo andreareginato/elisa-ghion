@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Link } from "react-router";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -135,6 +136,24 @@ export function AboutSection() {
                 &ldquo;Contact improvisation is not just a dance form but a
                 practice of presence, trust, and radical togetherness.&rdquo;
               </p>
+
+              <div ref={(el) => addTextRef(el, 4)}>
+                <Link
+                  to="/about"
+                  className="inline-flex items-center gap-2 mt-4 font-body text-sm uppercase tracking-[0.15em] text-brand-terracotta hover:text-brand-charcoal transition-colors duration-300"
+                >
+                  Learn More
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
