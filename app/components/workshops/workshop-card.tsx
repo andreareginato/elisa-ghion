@@ -8,6 +8,7 @@ export function WorkshopCard({ workshop }: { workshop: Workshop }) {
   const [expanded, setExpanded] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const isPast = workshop.status === "past";
 
   useGSAP(
     () => {
@@ -42,9 +43,16 @@ export function WorkshopCard({ workshop }: { workshop: Workshop }) {
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <h3 className="font-heading text-xl md:text-2xl font-bold text-brand-charcoal group-hover:text-brand-terracotta transition-colors duration-300">
-            {workshop.title}
-          </h3>
+          <div className="flex items-center gap-3">
+            <h3 className="font-heading text-xl md:text-2xl font-bold text-brand-charcoal group-hover:text-brand-terracotta transition-colors duration-300">
+              {workshop.title}
+            </h3>
+            {isPast && (
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-warmGray/10 text-brand-warmGray border border-brand-warmGray/20">
+                Past Event
+              </span>
+            )}
+          </div>
           <p className="font-body text-brand-warmGray mt-1 text-[15px]">
             {workshop.subtitle}
           </p>
@@ -99,7 +107,7 @@ export function WorkshopCard({ workshop }: { workshop: Workshop }) {
             onClick={(e) => e.stopPropagation()}
             className="inline-flex items-center gap-2 mt-6 px-7 py-3 bg-brand-charcoal text-brand-cream font-body text-sm font-medium rounded-full hover:bg-brand-terracotta transition-colors duration-300"
           >
-            Learn More
+            {isPast ? "View Details" : "Learn More"}
             <svg
               className="w-3.5 h-3.5"
               fill="none"

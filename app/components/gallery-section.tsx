@@ -1,66 +1,13 @@
 import { useRef } from "react";
+import { Link } from "react-router";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { galleryItems } from "~/data/gallery";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const galleryItems = [
-  {
-    src: "/images/gallery-1.jpg",
-    alt: "Dancer in motion",
-    caption: "The art of falling",
-    span: "md:col-span-2 md:row-span-2", // large
-  },
-  {
-    src: "/images/gallery-2.jpg",
-    alt: "Contact improvisation duet",
-    caption: "Shared weight",
-    span: "md:col-span-1 md:row-span-1",
-  },
-  {
-    src: "/images/gallery-3.jpg",
-    alt: "Workshop moment",
-    caption: "Listening through touch",
-    span: "md:col-span-1 md:row-span-2", // tall
-  },
-  {
-    src: "/images/gallery-4.jpg",
-    alt: "Movement exploration",
-    caption: "Floor work",
-    span: "md:col-span-1 md:row-span-1",
-  },
-  {
-    src: "/images/gallery-5.jpg",
-    alt: "Dance performance",
-    caption: "In dialogue with gravity",
-    span: "md:col-span-2 md:row-span-1", // wide
-  },
-  {
-    src: "/images/gallery-6.jpg",
-    alt: "Group improvisation",
-    caption: "Community practice",
-    span: "md:col-span-1 md:row-span-1",
-  },
-  {
-    src: "/images/gallery-7.jpg",
-    alt: "Spiraling into contact",
-    caption: "Spirals and curves",
-    span: "md:col-span-1 md:row-span-2", // tall
-  },
-  {
-    src: "/images/gallery-8.jpg",
-    alt: "Partner weight sharing",
-    caption: "Trust in motion",
-    span: "md:col-span-2 md:row-span-1", // wide
-  },
-  {
-    src: "/images/gallery-9.jpg",
-    alt: "Solo movement practice",
-    caption: "Finding stillness",
-    span: "md:col-span-1 md:row-span-1",
-  },
-];
+const displayItems = galleryItems.slice(0, 9);
 
 export function GallerySection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -141,7 +88,7 @@ export function GallerySection() {
 
         {/* Asymmetric masonry grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5 auto-rows-[200px] md:auto-rows-[220px]">
-          {galleryItems.map((item, i) => (
+          {displayItems.map((item, i) => (
             <div
               key={i}
               className={`gallery-item group relative overflow-hidden rounded-2xl cursor-pointer ${item.span}`}
@@ -167,6 +114,25 @@ export function GallerySection() {
               <div className="absolute inset-0 rounded-2xl ring-1 ring-brand-charcoal/5 group-hover:ring-brand-terracotta/20 transition-all duration-500" />
             </div>
           ))}
+        </div>
+
+        {/* View All link */}
+        <div className="text-center mt-12">
+          <Link
+            to="/gallery"
+            className="inline-flex items-center gap-2 font-body text-sm uppercase tracking-[0.15em] text-brand-terracotta hover:text-brand-charcoal transition-colors duration-300"
+          >
+            View All Photos
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </Link>
         </div>
       </div>
     </section>

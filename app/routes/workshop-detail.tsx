@@ -4,7 +4,9 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { workshops } from "~/data/workshops";
+import { Navigation } from "~/components/navigation";
 import { Footer } from "~/components/footer";
+import { Testimonials } from "~/components/testimonials";
 import type { Route } from "./+types/workshop-detail";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -33,14 +35,14 @@ export default function WorkshopDetail({
   const { workshop } = loaderData;
   const pageRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
+  const isPast = workshop.status === "past";
 
   useGSAP(
     () => {
       // Hero entry animations
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      tl.from(".ws-back", { y: -20, opacity: 0, duration: 0.5 })
-        .from(".ws-title", { y: 40, opacity: 0, duration: 0.8 }, "-=0.2")
+      tl.from(".ws-title", { y: 40, opacity: 0, duration: 0.8 })
         .from(".ws-subtitle", { y: 30, opacity: 0, duration: 0.6 }, "-=0.5")
         .from(".ws-line", { scaleX: 0, duration: 0.6 }, "-=0.3")
         .from(
@@ -111,16 +113,19 @@ export default function WorkshopDetail({
       });
 
       // CTA reveal
-      gsap.from(".ws-cta", {
-        y: 30,
-        opacity: 0,
-        duration: 0.7,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".ws-cta",
-          start: "top 90%",
-        },
-      });
+      const cta = document.querySelector(".ws-cta");
+      if (cta) {
+        gsap.from(".ws-cta", {
+          y: 30,
+          opacity: 0,
+          duration: 0.7,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".ws-cta",
+            start: "top 90%",
+          },
+        });
+      }
     },
     { scope: pageRef }
   );
@@ -131,12 +136,17 @@ export default function WorkshopDetail({
 
   return (
     <div ref={pageRef} className="min-h-screen bg-brand-cream">
-      {/* Sticky back link */}
-      <div className="sticky top-0 z-50 bg-brand-cream/90 backdrop-blur-sm border-b border-brand-sand/50">
-        <div className="max-w-4xl mx-auto px-6 lg:px-10 py-4">
+      <Navigation />
+
+      {/* Spacer for fixed nav */}
+      <div className="h-[72px]" />
+
+      {/* Hero area */}
+      <header className="pt-16 pb-12 md:pt-24 md:pb-16">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10">
           <Link
-            to="/#workshops"
-            className="ws-back inline-flex items-center gap-2 font-body text-sm text-brand-warmGray hover:text-brand-terracotta transition-colors duration-300"
+            to="/workshops"
+            className="inline-flex items-center gap-2 mb-8 font-body text-sm text-brand-warmGray hover:text-brand-terracotta transition-colors duration-300"
           >
             <svg
               className="w-4 h-4"
@@ -147,17 +157,19 @@ export default function WorkshopDetail({
             >
               <path d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
-            Back to Workshops
+            All Workshops
           </Link>
-        </div>
-      </div>
 
-      {/* Hero area */}
-      <header className="pt-16 pb-12 md:pt-24 md:pb-16">
-        <div className="max-w-4xl mx-auto px-6 lg:px-10">
-          <h1 className="ws-title font-heading text-4xl md:text-5xl lg:text-6xl font-black text-brand-charcoal tracking-tight leading-[1.1]">
-            {workshop.title}
-          </h1>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="ws-title font-heading text-4xl md:text-5xl lg:text-6xl font-black text-brand-charcoal tracking-tight leading-[1.1]">
+              {workshop.title}
+            </h1>
+            {isPast && (
+              <span className="ws-badge inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-brand-warmGray/10 text-brand-warmGray border border-brand-warmGray/20">
+                Past Event
+              </span>
+            )}
+          </div>
           <p className="ws-subtitle font-body text-lg md:text-xl text-brand-warmGray mt-4">
             {workshop.subtitle}
           </p>
@@ -240,29 +252,64 @@ export default function WorkshopDetail({
             </ul>
           </div>
 
+          {/* Testimonials */}
+          {workshop.testimonials && workshop.testimonials.length > 0 && (
+            <div className="mt-14">
+              <h3 className="font-heading text-xl font-bold text-brand-charcoal mb-6">
+                What Participants Say
+              </h3>
+              <Testimonials testimonials={workshop.testimonials} />
+            </div>
+          )}
+
           {/* CTA */}
-          <div className="ws-cta mt-16 text-center">
-            <a
-              href={workshop.externalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-10 py-4 bg-brand-terracotta text-brand-white font-body text-base font-medium rounded-full hover:bg-brand-charcoal transition-colors duration-300 shadow-lg shadow-brand-terracotta/20"
-            >
-              Register for this Workshop
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
+          {isPast ? (
+            <div className="mt-16 text-center">
+              <div className="inline-flex items-center gap-3 px-8 py-4 bg-brand-sand/50 text-brand-warmGray font-body text-base rounded-full border border-brand-sand">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                This workshop has concluded
+              </div>
+              <p className="mt-4 font-body text-sm text-brand-warmGray">
+                <Link
+                  to="/workshops"
+                  className="text-brand-terracotta hover:text-brand-charcoal transition-colors"
+                >
+                  View upcoming workshops
+                </Link>
+              </p>
+            </div>
+          ) : (
+            <div className="ws-cta mt-16 text-center">
+              <a
+                href={workshop.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-10 py-4 bg-brand-terracotta text-brand-white font-body text-base font-medium rounded-full hover:bg-brand-charcoal transition-colors duration-300 shadow-lg shadow-brand-terracotta/20"
               >
-                <path d="M7 17L17 7M17 7H7M17 7v10" />
-              </svg>
-            </a>
-            <p className="mt-4 font-body text-sm text-brand-warmGray">
-              You&apos;ll be redirected to the registration page
-            </p>
-          </div>
+                Register for this Workshop
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path d="M7 17L17 7M17 7H7M17 7v10" />
+                </svg>
+              </a>
+              <p className="mt-4 font-body text-sm text-brand-warmGray">
+                You&apos;ll be redirected to the registration page
+              </p>
+            </div>
+          )}
         </div>
       </div>
 

@@ -1,0 +1,117 @@
+export type GalleryCategory = "workshops" | "performances" | "jams" | "portraits";
+
+export type GalleryItem = {
+  src: string;
+  alt: string;
+  caption: string;
+  category: GalleryCategory;
+  span: string;
+};
+
+export const galleryItems: GalleryItem[] = [
+  {
+    src: "/images/gallery-1.jpg",
+    alt: "Dancer in motion",
+    caption: "The art of falling",
+    category: "performances",
+    span: "md:col-span-2 md:row-span-2",
+  },
+  {
+    src: "/images/gallery-2.jpg",
+    alt: "Contact improvisation duet",
+    caption: "Shared weight",
+    category: "jams",
+    span: "md:col-span-1 md:row-span-1",
+  },
+  {
+    src: "/images/gallery-3.jpg",
+    alt: "Workshop moment",
+    caption: "Listening through touch",
+    category: "workshops",
+    span: "md:col-span-1 md:row-span-2",
+  },
+  {
+    src: "/images/gallery-4.jpg",
+    alt: "Movement exploration",
+    caption: "Floor work",
+    category: "workshops",
+    span: "md:col-span-1 md:row-span-1",
+  },
+  {
+    src: "/images/gallery-5.jpg",
+    alt: "Dance performance",
+    caption: "In dialogue with gravity",
+    category: "performances",
+    span: "md:col-span-2 md:row-span-1",
+  },
+  {
+    src: "/images/gallery-6.jpg",
+    alt: "Group improvisation",
+    caption: "Community practice",
+    category: "jams",
+    span: "md:col-span-1 md:row-span-1",
+  },
+  {
+    src: "/images/gallery-7.jpg",
+    alt: "Spiraling into contact",
+    caption: "Spirals and curves",
+    category: "performances",
+    span: "md:col-span-1 md:row-span-2",
+  },
+  {
+    src: "/images/gallery-8.jpg",
+    alt: "Partner weight sharing",
+    caption: "Trust in motion",
+    category: "workshops",
+    span: "md:col-span-2 md:row-span-1",
+  },
+  {
+    src: "/images/gallery-9.jpg",
+    alt: "Solo movement practice",
+    caption: "Finding stillness",
+    category: "portraits",
+    span: "md:col-span-1 md:row-span-1",
+  },
+  {
+    src: "/images/gallery-10.jpg",
+    alt: "Elisa teaching a workshop",
+    caption: "Guiding awareness",
+    category: "workshops",
+    span: "md:col-span-1 md:row-span-1",
+  },
+  {
+    src: "/images/gallery-11.jpg",
+    alt: "Evening jam session",
+    caption: "Dancing into dusk",
+    category: "jams",
+    span: "md:col-span-2 md:row-span-1",
+  },
+  {
+    src: "/images/gallery-12.jpg",
+    alt: "Elisa portrait in studio",
+    caption: "Between movements",
+    category: "portraits",
+    span: "md:col-span-1 md:row-span-2",
+  },
+  {
+    src: "/images/gallery-13.jpg",
+    alt: "Outdoor performance",
+    caption: "Earth and sky",
+    category: "performances",
+    span: "md:col-span-1 md:row-span-1",
+  },
+  {
+    src: "/images/gallery-14.jpg",
+    alt: "Workshop closing circle",
+    caption: "Closing the circle",
+    category: "workshops",
+    span: "md:col-span-1 md:row-span-1",
+  },
+  {
+    src: "/images/gallery-15.jpg",
+    alt: "Portrait in natural light",
+    caption: "Presence",
+    category: "portraits",
+    span: "md:col-span-2 md:row-span-1",
+  },
+];

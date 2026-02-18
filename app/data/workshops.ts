@@ -1,3 +1,9 @@
+export type Testimonial = {
+  quote: string;
+  name: string;
+  year: string;
+};
+
 export type Workshop = {
   id: string;
   title: string;
@@ -9,9 +15,12 @@ export type Workshop = {
   location: string;
   externalUrl: string;
   image: string;
+  status: "upcoming" | "past";
+  testimonials?: Testimonial[];
 };
 
 export const workshops: Workshop[] = [
+  // ── Upcoming ──────────────────────────────────────────────
   {
     id: "fundamentals-spring",
     title: "Foundations of Contact Improvisation",
@@ -36,6 +45,21 @@ No prior dance experience is required — only curiosity and a willingness to ex
     location: "Studio Sospeso, Milan",
     externalUrl: "https://example.com/workshops/fundamentals-spring",
     image: "/images/gallery-1.jpg",
+    status: "upcoming",
+    testimonials: [
+      {
+        quote:
+          "Elisa creates such a safe and welcoming space. I had never done CI before and by Sunday afternoon I felt like I'd discovered a new language.",
+        name: "Marco T.",
+        year: "2025",
+      },
+      {
+        quote:
+          "The way she explains weight sharing is so intuitive. I finally understood what 'listening through touch' means.",
+        name: "Anna K.",
+        year: "2025",
+      },
+    ],
   },
   {
     id: "fluid-bodies",
@@ -61,6 +85,27 @@ This workshop is suited for practitioners with at least one year of regular CI p
     location: "Spazio Agorà, Rome",
     externalUrl: "https://example.com/workshops/fluid-bodies",
     image: "/images/gallery-3.jpg",
+    status: "upcoming",
+    testimonials: [
+      {
+        quote:
+          "This workshop completely changed how I approach partnering. The fluid dynamics metaphor opened up so many new possibilities.",
+        name: "Lucia M.",
+        year: "2025",
+      },
+      {
+        quote:
+          "Elisa's ability to guide advanced material while keeping the atmosphere playful is remarkable.",
+        name: "Stefan R.",
+        year: "2024",
+      },
+      {
+        quote:
+          "I came back to my local jam and people immediately noticed something had shifted in my dancing.",
+        name: "Francesca B.",
+        year: "2025",
+      },
+    ],
   },
   {
     id: "summer-intensive",
@@ -89,6 +134,21 @@ This residency is open to all levels with some movement experience. Beginners wi
     location: "Podere Il Leccio, Tuscany",
     externalUrl: "https://example.com/workshops/summer-intensive",
     image: "/images/gallery-5.jpg",
+    status: "upcoming",
+    testimonials: [
+      {
+        quote:
+          "Five days in Tuscany dancing under the stars — it was transformative. The community that forms during the lab is something special.",
+        name: "Elena V.",
+        year: "2025",
+      },
+      {
+        quote:
+          "The balance of structure and freedom is perfect. Mornings gave me new tools, afternoons let me integrate them.",
+        name: "Thomas W.",
+        year: "2024",
+      },
+    ],
   },
   {
     id: "gravity-play",
@@ -117,5 +177,195 @@ Some prior CI or movement experience is recommended, but acrobatic experience is
     location: "Centro Danza, Bologna",
     externalUrl: "https://example.com/workshops/gravity-play",
     image: "/images/gallery-2.jpg",
+    status: "upcoming",
+    testimonials: [
+      {
+        quote:
+          "I was terrified of lifts before this workshop. Elisa's progressive approach made me feel safe to explore.",
+        name: "Giulia P.",
+        year: "2025",
+      },
+      {
+        quote:
+          "The emphasis on consent and communication was as valuable as the physical skills. A model for how CI should be taught.",
+        name: "David L.",
+        year: "2024",
+      },
+      {
+        quote:
+          "So much fun! I left with sore muscles and a huge smile.",
+        name: "Marta S.",
+        year: "2025",
+      },
+    ],
+  },
+
+  // ── Past ──────────────────────────────────────────────────
+  {
+    id: "roots-and-wings-2025",
+    title: "Roots & Wings",
+    subtitle: "Grounding and flight in CI",
+    description:
+      "A weekend exploring the polarity of grounding and flight in contact improvisation. Working with the floor as foundation and the air as invitation, we investigated how rootedness enables freedom.",
+    longDescription: `Roots & Wings was a weekend intensive dedicated to the interplay between earthiness and airiness in contact improvisation.
+
+We spent the first day deepening our relationship with the floor — exploring rolling, sliding, and spiraling close to the ground. Through somatic exercises we cultivated a sense of rootedness: feeling the weight of the skeleton, the support of the earth, and the stability that comes from surrendering to gravity.
+
+On the second day we turned our attention upward — investigating how a strong ground connection enables moments of flight, suspension, and effortless partnering. We explored small lifts, jumps, and aerial pathways that emerge organically from grounded partnering.
+
+The workshop concluded with a long open jam where participants could integrate both qualities freely.`,
+    highlights: [
+      "Level: All levels",
+      "Schedule: Saturday & Sunday, 10:00–17:00",
+      "Focus: Grounding, floor work, and aerial exploration",
+      "Language: Italian and English",
+      "Max participants: 20",
+    ],
+    dates: "November 8–9, 2025",
+    location: "Studio Sospeso, Milan",
+    externalUrl: "https://example.com/workshops/roots-and-wings-2025",
+    image: "/images/gallery-7.jpg",
+    status: "past",
+    testimonials: [
+      {
+        quote:
+          "The arc from floor work to flight felt so natural. By Sunday I was doing things I never thought possible.",
+        name: "Roberto C.",
+        year: "2025",
+      },
+      {
+        quote:
+          "Elisa has a gift for making complex concepts feel accessible and embodied.",
+        name: "Sarah H.",
+        year: "2025",
+      },
+    ],
+  },
+  {
+    id: "summer-contact-lab-2025",
+    title: "Summer Contact Lab 2025",
+    subtitle: "Five-day immersive residency",
+    description:
+      "Our annual summer residency in the Tuscan countryside. Five days of movement, nature, and community, blending contact improvisation, somatics, and composition.",
+    longDescription: `The 2025 edition of the Summer Contact Lab brought together 22 dancers from across Europe for five days of intensive practice at Podere Il Leccio.
+
+This year's edition focused on the theme of "Landscape as Partner" — using the natural environment as a co-creator in our movement research. Sessions took place in olive groves, on hillsides, and under the canopy of ancient oaks.
+
+Morning classes explored how terrain, wind, and sunlight can inform our movement choices. Afternoon labs were dedicated to site-specific scores and creative projects. Evening jams under the stars became a beloved ritual.
+
+The community that formed during these five days continues to practice together across cities and countries.`,
+    highlights: [
+      "Level: All levels with some movement experience",
+      "Schedule: Monday–Friday, full days",
+      "Accommodation: Shared rooms (included)",
+      "Meals: Vegetarian, locally sourced",
+      "Participants: 22 dancers from 8 countries",
+    ],
+    dates: "July 7–11, 2025",
+    location: "Podere Il Leccio, Tuscany",
+    externalUrl: "https://example.com/workshops/summer-lab-2025",
+    image: "/images/gallery-6.jpg",
+    status: "past",
+    testimonials: [
+      {
+        quote:
+          "Dancing outdoors in Tuscany changed my relationship with space and environment forever.",
+        name: "Nina F.",
+        year: "2025",
+      },
+      {
+        quote:
+          "The 'Landscape as Partner' theme was brilliant. I still use those scores in my own teaching.",
+        name: "Alex M.",
+        year: "2025",
+      },
+    ],
+  },
+  {
+    id: "listening-touch-2024",
+    title: "The Listening Touch",
+    subtitle: "Somatic approaches to CI",
+    description:
+      "A weekend integrating somatic practices — body-mind centering, Feldenkrais, and breath work — into contact improvisation. We explored how deepening inner listening transforms our capacity for relational movement.",
+    longDescription: `The Listening Touch was a weekend of slow, deep practice at the intersection of somatics and contact improvisation.
+
+We began each session with extended somatic explorations — body scanning, breath work, and Feldenkrais-inspired movement lessons — to sensitize the nervous system and cultivate fine-grained proprioception.
+
+From this heightened state of inner listening, we moved into contact improvisation duets, trios, and group scores. The quality of touch and attention was remarkably different from our everyday practice — more nuanced, more responsive, more alive.
+
+Participants described the experience as "dancing in high definition" — a level of sensitivity and presence that continued to inform their practice long after the workshop ended.`,
+    highlights: [
+      "Level: All levels",
+      "Schedule: Saturday & Sunday, 10:00–17:00",
+      "Focus: Somatics, proprioception, and relational awareness",
+      "Language: Italian with English support",
+      "Max participants: 18",
+    ],
+    dates: "October 12–13, 2024",
+    location: "Spazio Agorà, Rome",
+    externalUrl: "https://example.com/workshops/listening-touch-2024",
+    image: "/images/gallery-4.jpg",
+    status: "past",
+    testimonials: [
+      {
+        quote:
+          "This workshop refined my sense of touch in ways I didn't know were possible. Pure magic.",
+        name: "Chiara D.",
+        year: "2024",
+      },
+      {
+        quote:
+          "The somatic warm-ups alone were worth the trip. I now use them every day in my own practice.",
+        name: "James B.",
+        year: "2024",
+      },
+      {
+        quote:
+          "'Dancing in high definition' — that's exactly what it felt like.",
+        name: "Valentina R.",
+        year: "2024",
+      },
+    ],
+  },
+  {
+    id: "contact-composition-2024",
+    title: "Contact & Composition",
+    subtitle: "From improvisation to performance",
+    description:
+      "How do we move from open improvisation to composed performance without losing the spontaneity and authenticity of CI? This workshop explored the fertile territory between improvisation and choreography.",
+    longDescription: `Contact & Composition was a weekend laboratory exploring the creative territory between free improvisation and structured performance.
+
+We investigated a range of compositional tools — spatial awareness, timing, repetition, contrast, and narrative arc — and applied them to contact improvisation duets and group scores.
+
+Through a series of guided exercises and creative tasks, participants discovered how compositional awareness can enhance rather than constrain the improvisational encounter. We worked toward short performance sketches that were shared in a closing showing for friends and family.
+
+The workshop was co-taught with composer Maria Silvestri, who provided live musical accompaniment throughout and led sessions on the relationship between sound and movement.`,
+    highlights: [
+      "Level: Intermediate to advanced",
+      "Schedule: Saturday & Sunday, 10:00–18:00",
+      "Focus: Composition, performance, and musicality",
+      "Co-teacher: Maria Silvestri (live music)",
+      "Closing showing: Sunday evening",
+      "Max participants: 16",
+    ],
+    dates: "May 18–19, 2024",
+    location: "Centro Danza, Bologna",
+    externalUrl: "https://example.com/workshops/contact-composition-2024",
+    image: "/images/gallery-9.jpg",
+    status: "past",
+    testimonials: [
+      {
+        quote:
+          "Having live music transformed the entire experience. The dialogue between movement and sound was exquisite.",
+        name: "Paolo G.",
+        year: "2024",
+      },
+      {
+        quote:
+          "I finally understand how to bring compositional thinking into my improvisations without losing authenticity.",
+        name: "Lisa W.",
+        year: "2024",
+      },
+    ],
   },
 ];

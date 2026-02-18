@@ -14,7 +14,7 @@ export function Footer() {
 
           <div className="mt-8 flex gap-8">
             <a
-              href="https://instagram.com"
+              href="https://instagram.com/elisaghion"
               target="_blank"
               rel="noopener noreferrer"
               className="font-body text-[13px] uppercase tracking-[0.15em] text-brand-warmGray hover:text-brand-terracottaLight transition-colors duration-300"
@@ -28,12 +28,6 @@ export function Footer() {
               className="font-body text-[13px] uppercase tracking-[0.15em] text-brand-warmGray hover:text-brand-terracottaLight transition-colors duration-300"
             >
               Facebook
-            </a>
-            <a
-              href="mailto:hello@elisaghion.com"
-              className="font-body text-[13px] uppercase tracking-[0.15em] text-brand-warmGray hover:text-brand-terracottaLight transition-colors duration-300"
-            >
-              Contact
             </a>
           </div>
 

@@ -3,7 +3,10 @@ import { Navigation } from "~/components/navigation";
 import { HeroSection } from "~/components/hero/hero-section";
 import { AboutSection } from "~/components/about-section";
 import { GallerySection } from "~/components/gallery-section";
+import { VideoSection } from "~/components/video-section";
 import { WorkshopsSection } from "~/components/workshops/workshops-section";
+import { CollaborationsSection } from "~/components/collaborations-section";
+import { NewsletterSection } from "~/components/newsletter-section";
 import { Footer } from "~/components/footer";
 
 export function meta({}: Route.MetaArgs) {
@@ -31,7 +34,10 @@ export default function Home() {
       <HeroSection />
       <AboutSection />
       <GallerySection />
+      <VideoSection />
       <WorkshopsSection />
+      <CollaborationsSection />
+      <NewsletterSection />
       <Footer />
     </>
   );

@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Link } from "react-router";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -6,6 +7,8 @@ import { workshops } from "~/data/workshops";
 import { WorkshopCard } from "./workshop-card";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const upcomingWorkshops = workshops.filter((w) => w.status === "upcoming");
 
 export function WorkshopsSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -71,11 +74,30 @@ export function WorkshopsSection() {
           </p>
         </div>
         <div className="grid gap-5">
-          {workshops.map((workshop) => (
+          {upcomingWorkshops.map((workshop) => (
             <div key={workshop.id} className="workshop-card">
               <WorkshopCard workshop={workshop} />
             </div>
           ))}
+        </div>
+
+        {/* View All link */}
+        <div className="text-center mt-12">
+          <Link
+            to="/workshops"
+            className="inline-flex items-center gap-2 font-body text-sm uppercase tracking-[0.15em] text-brand-terracotta hover:text-brand-charcoal transition-colors duration-300"
+          >
+            View All Workshops
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </Link>
         </div>
       </div>
     </section>
