@@ -7,10 +7,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Videos", href: "#videos" },
-  { label: "Workshops", href: "#workshops" },
+  { label: "About", href: "/about" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Workshops", href: "/workshops" },
   { label: "Collaborations", href: "#collaborations" },
 ];
 
@@ -53,68 +52,56 @@ export function Navigation() {
     { scope: navRef, dependencies: [isHome] }
   );
 
-  const handleClick = (
+  const handleHashClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string
   ) => {
-    if (!isHome) return; // Let Link handle navigation on sub-pages
     e.preventDefault();
     const target = document.querySelector(href);
     target?.scrollIntoView({ behavior: "smooth" });
     setMenuOpen(false);
   };
 
-  const renderNavLink = (link: { label: string; href: string }) => {
-    const className =
-      "relative font-body text-[13px] uppercase tracking-[0.2em] text-brand-charcoalLight hover:text-brand-terracotta transition-colors duration-300 after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1.5px] after:bg-brand-terracotta hover:after:w-full after:transition-all after:duration-300";
+  const linkClassName =
+    "relative font-body text-[13px] uppercase tracking-[0.2em] text-brand-charcoalLight hover:text-brand-terracotta transition-colors duration-300 after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1.5px] after:bg-brand-terracotta hover:after:w-full after:transition-all after:duration-300";
 
-    if (isHome) {
+  const mobileLinkClassName =
+    "font-body text-[13px] uppercase tracking-[0.2em] text-brand-charcoalLight hover:text-brand-terracotta transition-colors";
+
+  const renderNavLink = (link: { label: string; href: string }, mobile = false) => {
+    const cls = mobile ? mobileLinkClassName : linkClassName;
+    const isHash = link.href.startsWith("#");
+
+    if (isHash) {
+      if (isHome) {
+        return (
+          <a
+            key={link.href}
+            href={link.href}
+            onClick={(e) => handleHashClick(e, link.href)}
+            className={cls}
+          >
+            {link.label}
+          </a>
+        );
+      }
       return (
-        <a
+        <Link
           key={link.href}
-          href={link.href}
-          onClick={(e) => handleClick(e, link.href)}
-          className={className}
+          to={`/${link.href}`}
+          className={cls}
+          onClick={() => setMenuOpen(false)}
         >
           {link.label}
-        </a>
+        </Link>
       );
     }
 
     return (
       <Link
         key={link.href}
-        to={`/${link.href}`}
-        className={className}
-        onClick={() => setMenuOpen(false)}
-      >
-        {link.label}
-      </Link>
-    );
-  };
-
-  const renderMobileNavLink = (link: { label: string; href: string }) => {
-    const className =
-      "font-body text-[13px] uppercase tracking-[0.2em] text-brand-charcoalLight hover:text-brand-terracotta transition-colors";
-
-    if (isHome) {
-      return (
-        <a
-          key={link.href}
-          href={link.href}
-          onClick={(e) => handleClick(e, link.href)}
-          className={className}
-        >
-          {link.label}
-        </a>
-      );
-    }
-
-    return (
-      <Link
-        key={link.href}
-        to={`/${link.href}`}
-        className={className}
+        to={link.href}
+        className={cls}
         onClick={() => setMenuOpen(false)}
       >
         {link.label}
@@ -152,7 +139,7 @@ export function Navigation() {
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-10">
-          {navLinks.map(renderNavLink)}
+          {navLinks.map((link) => renderNavLink(link))}
         </div>
 
         {/* Mobile hamburger */}
@@ -186,7 +173,7 @@ export function Navigation() {
         }`}
       >
         <div className="px-6 py-5 bg-brand-cream/97 backdrop-blur-xl border-t border-brand-sand flex flex-col gap-5">
-          {navLinks.map(renderMobileNavLink)}
+          {navLinks.map((link) => renderNavLink(link, true))}
         </div>
       </div>
     </nav>
