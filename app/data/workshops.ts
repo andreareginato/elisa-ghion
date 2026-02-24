@@ -11,16 +11,128 @@ export type Workshop = {
   description: string;
   longDescription: string;
   highlights: string[];
+  /** ISO date string for sorting and auto-status (e.g. "2026-03-15") */
+  startDate: string;
+  /** ISO date string for multi-day events (e.g. "2026-03-16") */
+  endDate?: string;
+  /** Human-readable date display (e.g. "March 15–16, 2026") */
   dates: string;
   location: string;
   externalUrl: string;
   image: string;
-  status: "upcoming" | "past";
+  format: "weekend" | "intensive" | "weekly" | "jam" | "performance";
+  /** For weekly classes: recurring schedule (e.g. "Tuesday, 19:00–21:00") */
+  schedule?: string;
+  /** For weekly classes: season period (e.g. "October 2025 – June 2026") */
+  period?: string;
   testimonials?: Testimonial[];
 };
 
+/** Compute status from dates — no manual flag needed */
+export function isUpcoming(workshop: Workshop): boolean {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const compareDate = workshop.endDate
+    ? new Date(workshop.endDate)
+    : new Date(workshop.startDate);
+  return compareDate >= now;
+}
+
+/** Get upcoming events sorted by start date */
+export function getUpcoming(items: Workshop[]): Workshop[] {
+  return items.filter(isUpcoming).sort(
+    (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+  );
+}
+
+/** Get past events sorted by start date descending (most recent first) */
+export function getPast(items: Workshop[]): Workshop[] {
+  return items.filter((w) => !isUpcoming(w)).sort(
+    (a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+  );
+}
+
+/** Format badge config per format type */
+export const formatConfig: Record<
+  Workshop["format"],
+  { bg: string; text: string; label: string }
+> = {
+  weekend: { bg: "bg-brand-terracotta/10", text: "text-brand-terracotta", label: "Workshop" },
+  intensive: { bg: "bg-brand-coral/10", text: "text-brand-coral", label: "Intensive" },
+  weekly: { bg: "bg-brand-gold/15", text: "text-brand-gold", label: "Weekly Class" },
+  jam: { bg: "bg-brand-gold/15", text: "text-brand-gold", label: "Jam" },
+  performance: { bg: "bg-brand-rose/10", text: "text-brand-rose", label: "Performance" },
+};
+
 export const workshops: Workshop[] = [
-  // ── Upcoming ──────────────────────────────────────────────
+  // ── Weekly Classes ───────────────────────────────────────
+  {
+    id: "weekly-ci-milan",
+    title: "Contact Improvisation Open Class",
+    subtitle: "Weekly practice in Milan",
+    description:
+      "A welcoming weekly class open to all levels. Each session combines a guided warm-up, technique exploration, and open dancing. A consistent practice to deepen your CI journey throughout the season.",
+    longDescription: `This weekly class is the heart of our Milan CI community — a regular space to practice, explore, and grow together throughout the season.
+
+Each session follows a simple arc: we begin with a somatic warm-up to arrive in the body, move into guided scores and technique exploration around a weekly theme, and close with open dancing where you can integrate what you've discovered.
+
+Themes rotate throughout the season — from grounding and floor work to partnering, lifts, and composition — so the class stays fresh even for regular participants. Newcomers are always welcome; each session is designed to be accessible while offering depth for experienced movers.
+
+No registration required — just show up. Drop-in and season passes available.`,
+    highlights: [
+      "Level: Open to all — beginners welcome",
+      "Drop-in or season pass available",
+      "Themes rotate weekly",
+      "Language: Italian with English support",
+      "What to bring: Comfortable clothes, water bottle",
+    ],
+    startDate: "2025-10-07",
+    endDate: "2026-06-30",
+    dates: "",
+    schedule: "Tuesday, 19:00–21:00",
+    period: "October 2025 – June 2026",
+    location: "Studio Sospeso, Milan",
+    externalUrl: "https://example.com/classes/weekly-milan",
+    image: "/images/gallery-8.jpg",
+    format: "weekly",
+    testimonials: [
+      {
+        quote:
+          "The Tuesday class has become the highlight of my week. I love how the themes evolve across the season.",
+        name: "Carla N.",
+        year: "2025",
+      },
+    ],
+  },
+  {
+    id: "weekly-ci-bologna",
+    title: "Contact Improvisation Open Class",
+    subtitle: "Weekly practice in Bologna",
+    description:
+      "A weekly CI class in Bologna for all levels. Guided warm-ups, partnering scores, and open practice in a warm and inclusive atmosphere.",
+    longDescription: `Our Bologna weekly class offers a regular space to explore contact improvisation in a supportive and inclusive environment.
+
+Each session includes a somatic warm-up, guided partnering scores, and open practice time. The class follows a seasonal arc with themes that deepen progressively, while remaining accessible to newcomers at any point.
+
+The Bologna community is vibrant and welcoming — many long-term friendships and dance partnerships have formed through this class. Come join us!`,
+    highlights: [
+      "Level: Open to all",
+      "Drop-in or season pass available",
+      "Language: Italian with English support",
+      "What to bring: Comfortable clothes, water bottle",
+    ],
+    startDate: "2025-10-09",
+    endDate: "2026-06-30",
+    dates: "",
+    schedule: "Thursday, 19:30–21:30",
+    period: "October 2025 – June 2026",
+    location: "Centro Danza, Bologna",
+    externalUrl: "https://example.com/classes/weekly-bologna",
+    image: "/images/gallery-10.jpg",
+    format: "weekly",
+  },
+
+  // ── Workshops ──────────────────────────────────────────
   {
     id: "fundamentals-spring",
     title: "Foundations of Contact Improvisation",
@@ -41,11 +153,13 @@ No prior dance experience is required — only curiosity and a willingness to ex
       "Language: Italian with English support",
       "Max participants: 20",
     ],
+    startDate: "2026-03-15",
+    endDate: "2026-03-16",
     dates: "March 15–16, 2026",
     location: "Studio Sospeso, Milan",
     externalUrl: "https://example.com/workshops/fundamentals-spring",
     image: "/images/gallery-1.jpg",
-    status: "upcoming",
+    format: "weekend",
     testimonials: [
       {
         quote:
@@ -81,11 +195,13 @@ This workshop is suited for practitioners with at least one year of regular CI p
       "Language: Italian and English",
       "Max participants: 16",
     ],
+    startDate: "2026-04-05",
+    endDate: "2026-04-06",
     dates: "April 5–6, 2026",
     location: "Spazio Agorà, Rome",
     externalUrl: "https://example.com/workshops/fluid-bodies",
     image: "/images/gallery-3.jpg",
-    status: "upcoming",
+    format: "weekend",
     testimonials: [
       {
         quote:
@@ -130,11 +246,13 @@ This residency is open to all levels with some movement experience. Beginners wi
       "What to bring: Layers for outdoor practice, sunscreen, journal",
       "Max participants: 24",
     ],
+    startDate: "2026-07-07",
+    endDate: "2026-07-11",
     dates: "July 7–11, 2026",
     location: "Podere Il Leccio, Tuscany",
     externalUrl: "https://example.com/workshops/summer-intensive",
     image: "/images/gallery-5.jpg",
-    status: "upcoming",
+    format: "intensive",
     testimonials: [
       {
         quote:
@@ -173,11 +291,13 @@ Some prior CI or movement experience is recommended, but acrobatic experience is
       "What to bring: Comfortable athletic clothing, knee pads optional",
       "Max participants: 18",
     ],
+    startDate: "2026-09-20",
+    endDate: "2026-09-21",
     dates: "September 20–21, 2026",
     location: "Centro Danza, Bologna",
     externalUrl: "https://example.com/workshops/gravity-play",
     image: "/images/gallery-2.jpg",
-    status: "upcoming",
+    format: "weekend",
     testimonials: [
       {
         quote:
@@ -198,6 +318,97 @@ Some prior CI or movement experience is recommended, but acrobatic experience is
         year: "2025",
       },
     ],
+  },
+
+  // ── Jams & Performances ────────────────────────────────
+  {
+    id: "jam-spring-2026",
+    title: "Open Jam — Spring Edition",
+    subtitle: "Free-form contact improvisation jam",
+    description:
+      "An open jam session for the CI community. No teaching, no structure — just music, space, and the invitation to dance. All levels welcome.",
+    longDescription: `Our seasonal open jams are a cornerstone of the CI community — a space to practice freely, meet new dance partners, and enjoy the simple pleasure of moving together.
+
+There is no teaching or structure: the space opens, music plays softly, and you are invited to dance however you feel called. Come alone or with friends, dance for an hour or the whole evening, rest when you need to.
+
+All levels welcome. If you're new to CI, jams are a wonderful place to observe, begin with small dances, and connect with the community.`,
+    highlights: [
+      "Level: Open to all",
+      "No registration needed",
+      "Bring: Water, comfortable clothes",
+    ],
+    startDate: "2026-03-28",
+    dates: "March 28, 2026",
+    location: "Spazio Agorà, Rome",
+    externalUrl: "",
+    image: "/images/gallery-11.jpg",
+    format: "jam",
+  },
+  {
+    id: "performance-teatro-2026",
+    title: "CI Duet — Teatro della Limonaia",
+    subtitle: "Contact improvisation performance",
+    description:
+      "A live contact improvisation duet performance exploring the themes of gravity, trust, and conversation through movement. Performed with musician Marco Ferretti.",
+    longDescription: `An evening of live contact improvisation at Teatro della Limonaia in Florence.
+
+Elisa performs a duet with dancer and long-time collaborator Paolo Ventura, accompanied by live electronic music from Marco Ferretti. The piece explores the tension between structure and freedom — how two bodies can compose in real time, creating a performance that is unrepeatable and fully present.
+
+The evening includes a post-show conversation with the artists about the creative process and the philosophy behind contact improvisation as a performing art.`,
+    highlights: [
+      "Doors open: 20:00",
+      "Performance: 20:30",
+      "Post-show conversation: 21:30",
+      "With: Paolo Ventura (dance), Marco Ferretti (live music)",
+    ],
+    startDate: "2026-05-10",
+    dates: "May 10, 2026",
+    location: "Teatro della Limonaia, Florence",
+    externalUrl: "",
+    image: "/images/gallery-12.jpg",
+    format: "performance",
+  },
+  {
+    id: "jam-summer-2026",
+    title: "Open Jam — Summer Kickoff",
+    subtitle: "Outdoor jam in the park",
+    description:
+      "A special outdoor jam to celebrate the start of summer. Dancing on grass, under the trees, with the sky as our ceiling.",
+    longDescription: `Our Summer Kickoff jam moves outdoors to Parco Sempione — a beloved tradition to mark the transition from studio season to summer adventures.
+
+Bring a blanket, sunscreen, and your dancing spirit. We'll set up a soft area on the grass and dance together as the sun sets over Milan. All levels and non-dancers welcome — this is a community celebration.`,
+    highlights: [
+      "Level: Open to all",
+      "Outdoor event — weather permitting",
+      "Bring: Blanket, sunscreen, water",
+    ],
+    startDate: "2026-06-21",
+    dates: "June 21, 2026",
+    location: "Parco Sempione, Milan",
+    externalUrl: "",
+    image: "/images/gallery-13.jpg",
+    format: "jam",
+  },
+  {
+    id: "jam-autumn-2026",
+    title: "Autumn Jam",
+    subtitle: "Season opening jam",
+    description:
+      "The first jam of the new season — a warm welcome back to the studio after summer. Reconnect with the community and set intentions for the year ahead.",
+    longDescription: `The Autumn Jam marks the beginning of a new CI season in Milan. After the summer break, we gather to reconnect, share stories, and dance together.
+
+The evening begins with a brief opening circle to welcome new and returning members, followed by three hours of open dancing. A perfect way to ease back into practice and meet the community.`,
+    highlights: [
+      "Level: Open to all",
+      "Opening circle: 19:00",
+      "Open jam: 19:30–22:00",
+    ],
+    startDate: "2026-10-11",
+    dates: "October 11, 2026",
+    location: "Studio Sospeso, Milan",
+    externalUrl: "",
+    image: "/images/gallery-14.jpg",
+    format: "jam",
   },
 
   // ── Past ──────────────────────────────────────────────────
@@ -221,11 +432,13 @@ The workshop concluded with a long open jam where participants could integrate b
       "Language: Italian and English",
       "Max participants: 20",
     ],
+    startDate: "2025-11-08",
+    endDate: "2025-11-09",
     dates: "November 8–9, 2025",
     location: "Studio Sospeso, Milan",
     externalUrl: "https://example.com/workshops/roots-and-wings-2025",
     image: "/images/gallery-7.jpg",
-    status: "past",
+    format: "weekend",
     testimonials: [
       {
         quote:
@@ -261,11 +474,13 @@ The community that formed during these five days continues to practice together 
       "Meals: Vegetarian, locally sourced",
       "Participants: 22 dancers from 8 countries",
     ],
+    startDate: "2025-07-07",
+    endDate: "2025-07-11",
     dates: "July 7–11, 2025",
     location: "Podere Il Leccio, Tuscany",
     externalUrl: "https://example.com/workshops/summer-lab-2025",
     image: "/images/gallery-6.jpg",
-    status: "past",
+    format: "intensive",
     testimonials: [
       {
         quote:
@@ -301,11 +516,13 @@ Participants described the experience as "dancing in high definition" — a leve
       "Language: Italian with English support",
       "Max participants: 18",
     ],
+    startDate: "2024-10-12",
+    endDate: "2024-10-13",
     dates: "October 12–13, 2024",
     location: "Spazio Agorà, Rome",
     externalUrl: "https://example.com/workshops/listening-touch-2024",
     image: "/images/gallery-4.jpg",
-    status: "past",
+    format: "weekend",
     testimonials: [
       {
         quote:
@@ -348,11 +565,13 @@ The workshop was co-taught with composer Maria Silvestri, who provided live musi
       "Closing showing: Sunday evening",
       "Max participants: 16",
     ],
+    startDate: "2024-05-18",
+    endDate: "2024-05-19",
     dates: "May 18–19, 2024",
     location: "Centro Danza, Bologna",
     externalUrl: "https://example.com/workshops/contact-composition-2024",
     image: "/images/gallery-9.jpg",
-    status: "past",
+    format: "weekend",
     testimonials: [
       {
         quote:

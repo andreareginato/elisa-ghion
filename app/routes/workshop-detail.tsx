@@ -3,7 +3,7 @@ import { Link, data } from "react-router";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { workshops } from "~/data/workshops";
+import { workshops, isUpcoming } from "~/data/workshops";
 import { Navigation } from "~/components/navigation";
 import { Footer } from "~/components/footer";
 import { Testimonials } from "~/components/testimonials";
@@ -35,7 +35,7 @@ export default function WorkshopDetail({
   const { workshop } = loaderData;
   const pageRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
-  const isPast = workshop.status === "past";
+  const isPast = !isUpcoming(workshop);
 
   useGSAP(
     () => {

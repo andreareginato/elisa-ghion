@@ -7,9 +7,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const navLinks = [
-  { label: "About", href: "/about" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "Workshops", href: "/workshops" },
+  { label: "About", href: "#about" },
+  { label: "Gallery", href: "#gallery" },
+  { label: "Videos", href: "#videos" },
+  { label: "Workshops", href: "#workshops" },
   { label: "Collaborations", href: "#collaborations" },
 ];
 
@@ -52,55 +53,39 @@ export function Navigation() {
     { scope: navRef, dependencies: [isHome] }
   );
 
-  const handleHashClick = (
+  const handleClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string
   ) => {
+    if (!isHome) return; // Let Link handle navigation on sub-pages
     e.preventDefault();
     const target = document.querySelector(href);
     target?.scrollIntoView({ behavior: "smooth" });
     setMenuOpen(false);
   };
 
-  const linkClassName =
-    "relative font-body text-[13px] uppercase tracking-[0.2em] text-brand-charcoalLight hover:text-brand-terracotta transition-colors duration-300 after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1.5px] after:bg-brand-terracotta hover:after:w-full after:transition-all after:duration-300";
-
-  const mobileLinkClassName =
-    "font-body text-[13px] uppercase tracking-[0.2em] text-brand-charcoalLight hover:text-brand-terracotta transition-colors";
-
   const renderNavLink = (link: { label: string; href: string }, mobile = false) => {
-    const cls = mobile ? mobileLinkClassName : linkClassName;
-    const isHash = link.href.startsWith("#");
+    const cls = mobile
+      ? "font-body text-[13px] uppercase tracking-[0.2em] text-brand-charcoalLight hover:text-brand-terracotta transition-colors"
+      : "relative font-body text-[13px] uppercase tracking-[0.2em] text-brand-charcoalLight hover:text-brand-terracotta transition-colors duration-300 after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1.5px] after:bg-brand-terracotta hover:after:w-full after:transition-all after:duration-300";
 
-    if (isHash) {
-      if (isHome) {
-        return (
-          <a
-            key={link.href}
-            href={link.href}
-            onClick={(e) => handleHashClick(e, link.href)}
-            className={cls}
-          >
-            {link.label}
-          </a>
-        );
-      }
+    if (isHome) {
       return (
-        <Link
+        <a
           key={link.href}
-          to={`/${link.href}`}
+          href={link.href}
+          onClick={(e) => handleClick(e, link.href)}
           className={cls}
-          onClick={() => setMenuOpen(false)}
         >
           {link.label}
-        </Link>
+        </a>
       );
     }
 
     return (
       <Link
         key={link.href}
-        to={link.href}
+        to={`/${link.href}`}
         className={cls}
         onClick={() => setMenuOpen(false)}
       >

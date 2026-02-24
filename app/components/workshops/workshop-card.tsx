@@ -2,13 +2,16 @@ import { useRef, useState } from "react";
 import { Link } from "react-router";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { isUpcoming, formatConfig } from "~/data/workshops";
 import type { Workshop } from "~/data/workshops";
 
 export function WorkshopCard({ workshop }: { workshop: Workshop }) {
   const [expanded, setExpanded] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const isPast = workshop.status === "past";
+  const past = !isUpcoming(workshop);
+  const isWeekly = workshop.format === "weekly";
+  const badge = formatConfig[workshop.format];
 
   useGSAP(
     () => {
@@ -43,15 +46,13 @@ export function WorkshopCard({ workshop }: { workshop: Workshop }) {
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <h3 className="font-heading text-xl md:text-2xl font-bold text-brand-charcoal group-hover:text-brand-terracotta transition-colors duration-300">
               {workshop.title}
             </h3>
-            {isPast && (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-warmGray/10 text-brand-warmGray border border-brand-warmGray/20">
-                Past Event
-              </span>
-            )}
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${past ? "bg-brand-warmGray/10 text-brand-warmGray" : `${badge.bg} ${badge.text}`}`}>
+              {past ? "Past Event" : badge.label}
+            </span>
           </div>
           <p className="font-body text-brand-warmGray mt-1 text-[15px]">
             {workshop.subtitle}
@@ -69,26 +70,31 @@ export function WorkshopCard({ workshop }: { workshop: Workshop }) {
       </div>
 
       <div className="flex flex-wrap gap-5 mt-4 font-body text-sm text-brand-charcoalLight">
+        {isWeekly ? (
+          <>
+            <span className="flex items-center gap-2">
+              <svg className="w-4 h-4 text-brand-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {workshop.schedule}
+            </span>
+            <span className="flex items-center gap-2">
+              <svg className="w-4 h-4 text-brand-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              {workshop.period}
+            </span>
+          </>
+        ) : (
+          <span className="flex items-center gap-2">
+            <svg className="w-4 h-4 text-brand-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            {workshop.dates}
+          </span>
+        )}
         <span className="flex items-center gap-2">
-          <svg
-            className="w-4 h-4 text-brand-gold"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.5}
-          >
-            <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          {workshop.dates}
-        </span>
-        <span className="flex items-center gap-2">
-          <svg
-            className="w-4 h-4 text-brand-gold"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.5}
-          >
+          <svg className="w-4 h-4 text-brand-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
@@ -107,7 +113,7 @@ export function WorkshopCard({ workshop }: { workshop: Workshop }) {
             onClick={(e) => e.stopPropagation()}
             className="inline-flex items-center gap-2 mt-6 px-7 py-3 bg-brand-charcoal text-brand-cream font-body text-sm font-medium rounded-full hover:bg-brand-terracotta transition-colors duration-300"
           >
-            {isPast ? "View Details" : "Learn More"}
+            {past ? "View Details" : "Learn More"}
             <svg
               className="w-3.5 h-3.5"
               fill="none"
