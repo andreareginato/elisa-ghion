@@ -5,7 +5,9 @@ import gsap from "gsap";
 import { Navigation } from "~/components/navigation";
 import { Footer } from "~/components/footer";
 import { Lightbox } from "~/components/lightbox";
-import { galleryItems, type GalleryCategory } from "~/data/gallery";
+import type { GalleryCategory } from "~/lib/gallery-utils";
+import { getAllGalleryItems } from "~/db/queries.server";
+import type { Route } from "./+types/gallery";
 
 const categories: { label: string; value: GalleryCategory | "all" }[] = [
   { label: "All", value: "all" },
@@ -14,6 +16,10 @@ const categories: { label: string; value: GalleryCategory | "all" }[] = [
   { label: "Jams", value: "jams" },
   { label: "Portraits", value: "portraits" },
 ];
+
+export function loader() {
+  return { galleryItems: getAllGalleryItems() };
+}
 
 export function meta() {
   return [
@@ -26,14 +32,14 @@ export function meta() {
   ];
 }
 
-export default function GalleryPage() {
+export default function GalleryPage({ loaderData }: Route.ComponentProps) {
   const [filter, setFilter] = useState<GalleryCategory | "all">("all");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const filtered =
     filter === "all"
-      ? galleryItems
-      : galleryItems.filter((item) => item.category === filter);
+      ? loaderData.galleryItems
+      : loaderData.galleryItems.filter((item) => item.category === filter);
 
   useGSAP(() => {
     gsap.from(".gallery-page-heading", {

@@ -3,7 +3,8 @@ import { Link, data } from "react-router";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { workshops, isUpcoming } from "~/data/workshops";
+import { isUpcoming } from "~/lib/workshop-utils";
+import { getWorkshopWithTestimonials } from "~/db/queries.server";
 import { Navigation } from "~/components/navigation";
 import { Footer } from "~/components/footer";
 import { Testimonials } from "~/components/testimonials";
@@ -11,8 +12,8 @@ import type { Route } from "./+types/workshop-detail";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function clientLoader({ params }: Route.ClientLoaderArgs) {
-  const workshop = workshops.find((w) => w.id === params.id);
+export function loader({ params }: Route.LoaderArgs) {
+  const workshop = getWorkshopWithTestimonials(params.id!);
   if (!workshop) {
     throw data("Workshop not found", { status: 404 });
   }

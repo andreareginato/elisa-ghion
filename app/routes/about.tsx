@@ -5,8 +5,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Navigation } from "~/components/navigation";
 import { Footer } from "~/components/footer";
-import { researchAreas } from "~/data/research";
 import type { ResearchArea } from "~/data/research";
+import { getAllResearchAreas } from "~/db/queries.server";
+import type { Route } from "./+types/about";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -141,6 +142,10 @@ function ResearchBlock({ area, index }: { area: ResearchArea; index: number }) {
   );
 }
 
+export function loader() {
+  return { researchAreas: getAllResearchAreas() };
+}
+
 export function meta() {
   return [
     { title: "About — Elisa Ghion" },
@@ -152,7 +157,7 @@ export function meta() {
   ];
 }
 
-export default function AboutPage() {
+export default function AboutPage({ loaderData }: Route.ComponentProps) {
   const pageRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -347,7 +352,7 @@ export default function AboutPage() {
           </div>
 
           <div className="space-y-24">
-            {researchAreas.map((area, i) => (
+            {loaderData.researchAreas.map((area, i) => (
               <ResearchBlock key={area.title} area={area} index={i} />
             ))}
           </div>

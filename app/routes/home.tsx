@@ -8,6 +8,13 @@ import { WorkshopsSection } from "~/components/workshops/workshops-section";
 import { CollaborationsSection } from "~/components/collaborations-section";
 import { NewsletterSection } from "~/components/newsletter-section";
 import { Footer } from "~/components/footer";
+import { getUpcoming } from "~/lib/workshop-utils";
+import {
+  getAllWorkshopsWithTestimonials,
+  getAllGalleryItems,
+  getAllVideos,
+  getAllCollaborations,
+} from "~/db/queries.server";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -27,16 +34,25 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Home() {
+export function loader() {
+  return {
+    upcomingWorkshops: getUpcoming(getAllWorkshopsWithTestimonials()),
+    galleryItems: getAllGalleryItems(),
+    videos: getAllVideos(),
+    collaborations: getAllCollaborations(),
+  };
+}
+
+export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <>
       <Navigation />
       <HeroSection />
       <AboutSection />
-      <GallerySection />
-      <VideoSection />
-      <WorkshopsSection />
-      <CollaborationsSection />
+      <GallerySection items={loaderData.galleryItems} />
+      <VideoSection videos={loaderData.videos} />
+      <WorkshopsSection workshops={loaderData.upcomingWorkshops} />
+      <CollaborationsSection collaborations={loaderData.collaborations} />
       <NewsletterSection />
       <Footer />
     </>

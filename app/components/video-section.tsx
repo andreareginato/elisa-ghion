@@ -2,11 +2,11 @@ import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { videos } from "~/data/videos";
+import type { Video } from "~/data/videos";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function VideoCard({ video }: { video: (typeof videos)[number] }) {
+function VideoCard({ video }: { video: Video }) {
   const [playing, setPlaying] = useState(false);
 
   return (
@@ -68,7 +68,7 @@ function VideoCard({ video }: { video: (typeof videos)[number] }) {
   );
 }
 
-export function VideoSection() {
+export function VideoSection({ videos }: { videos: Video[] }) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useGSAP(

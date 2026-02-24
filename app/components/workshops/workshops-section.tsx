@@ -3,13 +3,12 @@ import { Link } from "react-router";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { workshops, getUpcoming, formatConfig } from "~/data/workshops";
+import { formatConfig } from "~/lib/workshop-utils";
+import type { Workshop } from "~/lib/workshop-utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const allUpcoming = getUpcoming(workshops);
-
-export function WorkshopsSection() {
+export function WorkshopsSection({ workshops }: { workshops: Workshop[] }) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -74,12 +73,12 @@ export function WorkshopsSection() {
         </div>
 
         {/* Calendar timeline */}
-        {allUpcoming.length > 0 && (
+        {workshops.length > 0 && (
           <div className="calendar-home">
             <div className="relative">
               <div className="absolute left-[7px] top-2 bottom-2 w-[2px] bg-brand-sand" />
               <div className="space-y-0">
-                {allUpcoming.map((event) => {
+                {workshops.map((event) => {
                   const style = formatConfig[event.format];
                   const isWeekly = event.format === "weekly";
                   return (

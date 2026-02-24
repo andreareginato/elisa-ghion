@@ -3,14 +3,13 @@ import { Link } from "react-router";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { galleryItems } from "~/data/gallery";
+import type { GalleryItem } from "~/lib/gallery-utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const displayItems = galleryItems.slice(0, 9);
-
-export function GallerySection() {
+export function GallerySection({ items }: { items: GalleryItem[] }) {
   const sectionRef = useRef<HTMLElement>(null);
+  const displayItems = items.slice(0, 9);
 
   useGSAP(
     () => {

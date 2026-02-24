@@ -2,8 +2,8 @@ import { useRef, useState } from "react";
 import { Link } from "react-router";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { isUpcoming, formatConfig } from "~/data/workshops";
-import type { Workshop } from "~/data/workshops";
+import { isUpcoming, formatConfig } from "~/lib/workshop-utils";
+import type { Workshop } from "~/lib/workshop-utils";
 
 export function WorkshopCard({ workshop }: { workshop: Workshop }) {
   const [expanded, setExpanded] = useState(false);

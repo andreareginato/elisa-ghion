@@ -1,4 +1,4 @@
-import { type RouteConfig, index, route } from "@react-router/dev/routes";
+import { type RouteConfig, index, route, layout } from "@react-router/dev/routes";
 
 export default [
   index("routes/home.tsx"),
@@ -6,4 +6,31 @@ export default [
   route("gallery", "routes/gallery.tsx"),
   route("workshops", "routes/workshops.tsx"),
   route("workshops/:id", "routes/workshop-detail.tsx"),
+
+  // Admin
+  route("admin/login", "routes/admin.login.tsx"),
+  route("admin/logout", "routes/admin.logout.tsx"),
+  layout("routes/admin.tsx", [
+    route("admin", "routes/admin.index.tsx"),
+    route("admin/workshops", "routes/admin.workshops.tsx"),
+    route("admin/workshops/new", "routes/admin.workshops.new.tsx"),
+    route("admin/workshops/:id/edit", "routes/admin.workshops.$id.edit.tsx"),
+    route("admin/workshops/:id/delete", "routes/admin.workshops.$id.delete.tsx"),
+    route("admin/gallery", "routes/admin.gallery.tsx"),
+    route("admin/gallery/new", "routes/admin.gallery.new.tsx"),
+    route("admin/gallery/:id/edit", "routes/admin.gallery.$id.edit.tsx"),
+    route("admin/gallery/:id/delete", "routes/admin.gallery.$id.delete.tsx"),
+    route("admin/collaborations", "routes/admin.collaborations.tsx"),
+    route("admin/collaborations/new", "routes/admin.collaborations.new.tsx"),
+    route("admin/collaborations/:id/edit", "routes/admin.collaborations.$id.edit.tsx"),
+    route("admin/collaborations/:id/delete", "routes/admin.collaborations.$id.delete.tsx"),
+    route("admin/research", "routes/admin.research.tsx"),
+    route("admin/research/new", "routes/admin.research.new.tsx"),
+    route("admin/research/:id/edit", "routes/admin.research.$id.edit.tsx"),
+    route("admin/research/:id/delete", "routes/admin.research.$id.delete.tsx"),
+    route("admin/videos", "routes/admin.videos.tsx"),
+    route("admin/videos/new", "routes/admin.videos.new.tsx"),
+    route("admin/videos/:id/edit", "routes/admin.videos.$id.edit.tsx"),
+    route("admin/videos/:id/delete", "routes/admin.videos.$id.delete.tsx"),
+  ]),
 ] satisfies RouteConfig;

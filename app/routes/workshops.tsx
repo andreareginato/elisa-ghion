@@ -4,11 +4,9 @@ import gsap from "gsap";
 import { Navigation } from "~/components/navigation";
 import { Footer } from "~/components/footer";
 import { WorkshopCard } from "~/components/workshops/workshop-card";
-import { workshops, getUpcoming, getPast } from "~/data/workshops";
-
-const weeklyClasses = getUpcoming(workshops).filter((w) => w.format === "weekly");
-const upcomingWorkshops = getUpcoming(workshops).filter((w) => w.format !== "weekly");
-const pastWorkshops = getPast(workshops);
+import { getUpcoming, getPast } from "~/lib/workshop-utils";
+import { getAllWorkshopsWithTestimonials } from "~/db/queries.server";
+import type { Route } from "./+types/workshops";
 
 export function meta() {
   return [
@@ -21,7 +19,18 @@ export function meta() {
   ];
 }
 
-export default function WorkshopsPage() {
+export function loader() {
+  const workshops = getAllWorkshopsWithTestimonials();
+  return {
+    weeklyClasses: getUpcoming(workshops).filter((w) => w.format === "weekly"),
+    upcomingWorkshops: getUpcoming(workshops).filter((w) => w.format !== "weekly"),
+    pastWorkshops: getPast(workshops),
+  };
+}
+
+export default function WorkshopsPage({ loaderData }: Route.ComponentProps) {
+  const { weeklyClasses, upcomingWorkshops, pastWorkshops } = loaderData;
+
   useGSAP(() => {
     gsap.from(".workshops-page-heading", {
       y: 40,

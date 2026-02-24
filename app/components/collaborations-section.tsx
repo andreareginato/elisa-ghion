@@ -2,11 +2,11 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { collaborations } from "~/data/collaborations";
+import type { Collaboration } from "~/data/collaborations";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function CollaborationsSection() {
+export function CollaborationsSection({ collaborations }: { collaborations: Collaboration[] }) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useGSAP(
