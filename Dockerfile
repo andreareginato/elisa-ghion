@@ -13,16 +13,14 @@ COPY . /app/
 COPY --from=development-dependencies-env /app/node_modules /app/node_modules
 WORKDIR /app
 RUN npm run build
+RUN npx esbuild scripts/seed.ts --bundle --platform=node --format=esm --packages=external --outfile=scripts/seed.mjs
 
 FROM node:20-alpine
 COPY ./package.json package-lock.json /app/
 COPY --from=production-dependencies-env /app/node_modules /app/node_modules
 COPY --from=build-env /app/build /app/build
 COPY ./server.js /app/server.js
-COPY ./scripts /app/scripts
-COPY ./app/data /app/app/data
-COPY ./app/db /app/app/db
-COPY ./app/lib /app/app/lib
+COPY --from=build-env /app/scripts/seed.mjs /app/scripts/seed.mjs
 COPY ./drizzle /app/drizzle
 COPY ./drizzle.config.ts /app/drizzle.config.ts
 WORKDIR /app
