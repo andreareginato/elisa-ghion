@@ -107,7 +107,7 @@ export function CollaborationsSection({ collaborations }: { collaborations: Coll
                 >
                   {collab.name}
                 </h3>
-                <p className="mt-2 font-body text-sm text-brand-white/70 leading-relaxed line-clamp-2">
+                <p className="mt-2 font-body text-sm text-brand-white/70 leading-relaxed line-clamp-2 whitespace-pre-line">
                   {collab.description}
                 </p>
 

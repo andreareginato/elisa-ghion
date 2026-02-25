@@ -130,7 +130,7 @@ export function AboutSection({ aboutSettings }: AboutSectionProps) {
             <div className="about-line mt-5 mb-8 h-[2px] w-14 bg-gradient-to-r from-brand-terracotta to-brand-gold origin-left" />
             <div className="space-y-5 font-body text-brand-charcoalLight leading-[1.8] text-[17px]">
               {bioParagraphs.map((paragraph, i) => (
-                <p key={i} ref={(el) => addTextRef(el, i)}>{paragraph}</p>
+                <p key={i} ref={(el) => addTextRef(el, i)} className="whitespace-pre-line">{paragraph}</p>
               ))}
               <p
                 ref={(el) => addTextRef(el, bioParagraphs.length)}

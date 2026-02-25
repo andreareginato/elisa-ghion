@@ -30,7 +30,7 @@ app.get("/healthcheck", (req, res) => {
 app.use(express.static("build/client", { maxAge: "1y", immutable: true }));
 
 // Serve uploaded files
-app.use("/uploads", express.static(UPLOAD_DIR, { maxAge: "1d" }));
+app.use("/uploads", express.static(UPLOAD_DIR, { maxAge: "7d" }));
 
 // React Router handler for all other requests
 const build = await import("./build/server/index.js");

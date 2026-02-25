@@ -105,7 +105,7 @@ export function WorkshopCard({ workshop }: { workshop: Workshop }) {
       {/* Expandable content */}
       <div ref={contentRef} className="overflow-hidden" style={{ height: 0 }}>
         <div className="pt-5 mt-5 border-t border-brand-sand">
-          <p className="font-body text-brand-charcoalLight leading-[1.8] text-[15px]">
+          <p className="font-body text-brand-charcoalLight leading-[1.8] text-[15px] whitespace-pre-line">
             {workshop.description}
           </p>
           <Link

@@ -102,7 +102,7 @@ function ResearchBlock({ area, index }: { area: ResearchArea; index: number }) {
         </h3>
 
         {/* Description */}
-        <p className="font-body text-brand-charcoalLight leading-[1.9] text-[15px] md:text-base mb-7">
+        <p className="font-body text-brand-charcoalLight leading-[1.9] text-[15px] md:text-base mb-7 whitespace-pre-line">
           {area.description}
         </p>
 
@@ -285,7 +285,7 @@ export default function AboutPage({ loaderData }: Route.ComponentProps) {
               .split("\n\n")
               .filter((p: string) => p.trim())
               .map((paragraph: string, i: number) => (
-                <p key={i} className="about-page-text">{paragraph.trim()}</p>
+                <p key={i} className="about-page-text whitespace-pre-line">{paragraph.trim()}</p>
               ))}
           </div>
         </div>
@@ -304,7 +304,7 @@ export default function AboutPage({ loaderData }: Route.ComponentProps) {
                 .split("\n\n")
                 .filter((p: string) => p.trim())
                 .map((paragraph: string, i: number) => (
-                  <p key={i}>{paragraph.trim()}</p>
+                  <p key={i} className="whitespace-pre-line">{paragraph.trim()}</p>
                 ))}
             </div>
             <p className="mt-8 font-heading text-xl font-medium italic text-brand-charcoal leading-relaxed">

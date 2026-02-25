@@ -228,7 +228,7 @@ export default function WorkshopDetail({
             {paragraphs.map((paragraph, i) => (
               <p
                 key={i}
-                className="ws-paragraph font-body text-brand-charcoalLight leading-[1.9] text-[15px] md:text-base"
+                className="ws-paragraph font-body text-brand-charcoalLight leading-[1.9] text-[15px] md:text-base whitespace-pre-line"
               >
                 {paragraph}
               </p>
