@@ -1,20 +1,33 @@
 import { writeFileSync, unlinkSync, existsSync, mkdirSync } from "fs";
-import { join, extname } from "path";
+import { join } from "path";
 import { randomUUID } from "crypto";
+import sharp from "sharp";
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR || "./data/uploads";
+const MAX_WIDTH = 1920;
+const MAX_HEIGHT = 1920;
+const JPEG_QUALITY = 82;
 
 export async function saveUpload(file: File): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
   return saveUploadFromBuffer(buffer, file.name);
 }
 
-export function saveUploadFromBuffer(buffer: Buffer, originalName: string): string {
+export async function saveUploadFromBuffer(buffer: Buffer, _originalName: string): Promise<string> {
   mkdirSync(UPLOAD_DIR, { recursive: true });
-  const ext = extname(originalName) || ".jpg";
-  const filename = `${randomUUID()}${ext}`;
+
+  const resized = await sharp(buffer)
+    .rotate()                          // auto-orient from EXIF
+    .resize(MAX_WIDTH, MAX_HEIGHT, {
+      fit: "inside",                   // keep aspect ratio, shrink if larger
+      withoutEnlargement: true,        // don't upscale small images
+    })
+    .jpeg({ quality: JPEG_QUALITY, mozjpeg: true })
+    .toBuffer();
+
+  const filename = `${randomUUID()}.jpg`;
   const filepath = join(UPLOAD_DIR, filename);
-  writeFileSync(filepath, buffer);
+  writeFileSync(filepath, resized);
   return `/uploads/${filename}`;
 }
 

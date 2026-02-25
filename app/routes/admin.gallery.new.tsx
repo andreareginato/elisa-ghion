@@ -25,7 +25,7 @@ export async function action({ request }: Route.ActionArgs) {
   if (!file || file.size === 0) throw new Error("Image file is required");
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  const src = saveUploadFromBuffer(buffer, file.name);
+  const src = await saveUploadFromBuffer(buffer, file.name);
   let spanValue = formData.get("span") as string;
 
   // Auto-detect span from image dimensions if set to "auto"
