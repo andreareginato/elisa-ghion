@@ -1,7 +1,15 @@
 export { type GalleryCategory, type GalleryItem } from "~/lib/gallery-utils";
-import type { GalleryItem } from "~/lib/gallery-utils";
+import type { GalleryCategory } from "~/lib/gallery-utils";
 
-export const galleryItems: GalleryItem[] = [
+type StaticGalleryItem = {
+  src: string;
+  alt: string;
+  caption: string;
+  category: GalleryCategory;
+  span: string;
+};
+
+export const galleryItems: StaticGalleryItem[] = [
   {
     src: "/images/gallery-1.jpg",
     alt: "Dancer in motion",
