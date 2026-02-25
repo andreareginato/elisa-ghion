@@ -1,12 +1,23 @@
 import express from "express";
 import { createRequestHandler } from "@react-router/express";
 import { mkdirSync } from "fs";
+import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
 const PORT = process.env.PORT || 3000;
 const UPLOAD_DIR = process.env.UPLOAD_DIR || "./data/uploads";
+const DATABASE_PATH = process.env.DATABASE_PATH || "./data/site.db";
 
 // Ensure upload directory exists
 mkdirSync(UPLOAD_DIR, { recursive: true });
+
+// Run database migrations on startup
+const sqlite = new Database(DATABASE_PATH);
+const migrationDb = drizzle(sqlite);
+migrate(migrationDb, { migrationsFolder: "./drizzle" });
+sqlite.close();
+console.log("Database migrations applied.");
 
 const app = express();
 

@@ -23,6 +23,7 @@ COPY ./scripts /app/scripts
 COPY ./app/data /app/app/data
 COPY ./app/db /app/app/db
 COPY ./app/lib /app/app/lib
+COPY ./drizzle /app/drizzle
 COPY ./drizzle.config.ts /app/drizzle.config.ts
 WORKDIR /app
 
