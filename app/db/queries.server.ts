@@ -204,3 +204,39 @@ export function updateVideo(id: number, data: Partial<typeof schema.videos.$infe
 export function deleteVideo(id: number) {
   return db.delete(schema.videos).where(eq(schema.videos.id, id)).run();
 }
+
+// ── Site Settings ─────────────────────────────────────
+
+export function getSetting(key: string): string {
+  const row = db.select().from(schema.siteSettings).where(eq(schema.siteSettings.key, key)).get();
+  return row?.value ?? "";
+}
+
+export function setSetting(key: string, value: string): void {
+  db.insert(schema.siteSettings)
+    .values({ key, value })
+    .onConflictDoUpdate({ target: schema.siteSettings.key, set: { value } })
+    .run();
+}
+
+const ABOUT_KEYS = [
+  "about_bio",
+  "about_philosophy",
+  "about_philosophy_quote",
+  "about_hero_image",
+  "about_profile_image",
+] as const;
+
+export function getAboutSettings(): Record<string, string> {
+  const rows = db.select().from(schema.siteSettings).all();
+  const map: Record<string, string> = {};
+  for (const key of ABOUT_KEYS) {
+    map[key] = "";
+  }
+  for (const row of rows) {
+    if ((ABOUT_KEYS as readonly string[]).includes(row.key)) {
+      map[row.key] = row.value;
+    }
+  }
+  return map;
+}

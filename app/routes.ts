@@ -12,6 +12,7 @@ export default [
   route("admin/logout", "routes/admin.logout.tsx"),
   layout("routes/admin.tsx", [
     route("admin", "routes/admin.index.tsx"),
+    route("admin/about", "routes/admin.about.tsx"),
     route("admin/workshops", "routes/admin.workshops.tsx"),
     route("admin/workshops/new", "routes/admin.workshops.new.tsx"),
     route("admin/workshops/:id/edit", "routes/admin.workshops.$id.edit.tsx"),

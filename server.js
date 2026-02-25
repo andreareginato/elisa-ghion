@@ -23,7 +23,7 @@ app.use("/uploads", express.static(UPLOAD_DIR, { maxAge: "1d" }));
 
 // React Router handler for all other requests
 const build = await import("./build/server/index.js");
-app.all("*", createRequestHandler({ build }));
+app.all("/{*splat}", createRequestHandler({ build }));
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);

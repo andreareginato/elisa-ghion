@@ -62,6 +62,11 @@ export const researchAreas = sqliteTable("research_areas", {
   sortOrder: integer("sort_order").notNull().default(0),
 });
 
+export const siteSettings = sqliteTable("site_settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull().default(""),
+});
+
 export const videos = sqliteTable("videos", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull(),

@@ -14,6 +14,7 @@ import {
   getAllGalleryItems,
   getAllVideos,
   getAllCollaborations,
+  getAboutSettings,
 } from "~/db/queries.server";
 
 export function meta(_args: Route.MetaArgs) {
@@ -40,6 +41,7 @@ export function loader() {
     galleryItems: getAllGalleryItems(),
     videos: getAllVideos(),
     collaborations: getAllCollaborations(),
+    aboutSettings: getAboutSettings(),
   };
 }
 
@@ -48,7 +50,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     <>
       <Navigation />
       <HeroSection />
-      <AboutSection />
+      <AboutSection aboutSettings={loaderData.aboutSettings} />
       <GallerySection items={loaderData.galleryItems} />
       <VideoSection videos={loaderData.videos} />
       <WorkshopsSection workshops={loaderData.upcomingWorkshops} />

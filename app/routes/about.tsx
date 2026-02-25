@@ -6,10 +6,28 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Navigation } from "~/components/navigation";
 import { Footer } from "~/components/footer";
 import type { ResearchArea } from "~/data/research";
-import { getAllResearchAreas } from "~/db/queries.server";
+import { getAllResearchAreas, getAboutSettings } from "~/db/queries.server";
 import type { Route } from "./+types/about";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const defaultBio = `Elisa Ghion is a contact improvisation teacher and performer based in Italy, dedicated to exploring the art of movement dialogue between bodies. Her practice is rooted in deep listening, shared weight, and the poetics of physical conversation.
+
+With over a decade of experience in somatics, dance improvisation, and movement research, Elisa creates spaces where practitioners of all levels can discover the intelligence of the body in relation to others and to gravity.
+
+Her teaching draws from contact improvisation, Body-Mind Centering, and contemporary dance, weaving together technique and creative exploration. She leads workshops and intensives across Europe, fostering community through the shared language of touch and movement.
+
+Elisa began her movement journey through contemporary dance in Milan, later discovering contact improvisation during a workshop in Berlin that changed her trajectory entirely. Since then she has studied with teachers including Nancy Stark Smith, Nita Little, Martin Keogh, and Kirstie Simson, deepening her understanding of the form and its possibilities.
+
+Today she divides her time between teaching regular classes in Milan, leading intensive workshops across Italy and Europe, and her own movement research — an ongoing inquiry into how contact improvisation can evolve as both an art form and a practice of radical presence.`;
+
+const defaultPhilosophy = `I believe that contact improvisation is learned through the body, not explained to the mind. My classes create conditions for discovery rather than delivering instructions — I offer scores, invitations, and questions that guide you toward your own experience.
+
+Safety and consent are foundational. Every class begins with clear agreements about touch, communication, and personal boundaries. I want everyone in the room to feel empowered to say yes, no, or not yet — and to know that each answer is equally valued.
+
+I teach from a place of ongoing learning. My practice is never finished, and I share what I am currently exploring alongside what I have integrated over the years. This keeps the work alive and honest.`;
+
+const defaultPhilosophyQuote = "Contact improvisation is not just a dance form but a practice of presence, trust, and radical togetherness.";
 
 function ResearchBlock({ area, index }: { area: ResearchArea; index: number }) {
   const isEven = index % 2 === 0;
@@ -143,7 +161,7 @@ function ResearchBlock({ area, index }: { area: ResearchArea; index: number }) {
 }
 
 export function loader() {
-  return { researchAreas: getAllResearchAreas() };
+  return { researchAreas: getAllResearchAreas(), aboutSettings: getAboutSettings() };
 }
 
 export function meta() {
@@ -240,13 +258,16 @@ export default function AboutPage({ loaderData }: Route.ComponentProps) {
       <div className="px-6 lg:px-10 pt-10 md:pt-16">
         <div className="max-w-5xl mx-auto">
           <div className="relative overflow-hidden rounded-3xl aspect-[21/9] shadow-2xl shadow-brand-charcoal/10">
-            <div className="absolute inset-0 bg-gradient-to-br from-brand-terracotta/25 via-brand-sand to-brand-coral/20" />
+            {loaderData.aboutSettings.about_hero_image ? (
+              <img
+                src={loaderData.aboutSettings.about_hero_image}
+                alt="Elisa Ghion"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-terracotta/25 via-brand-sand to-brand-coral/20" />
+            )}
             <div className="absolute inset-0 rounded-3xl ring-1 ring-brand-charcoal/5" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-brand-warmGray/30 font-heading text-lg italic">
-                Photo placeholder
-              </span>
-            </div>
           </div>
         </div>
       </div>
@@ -260,41 +281,12 @@ export default function AboutPage({ loaderData }: Route.ComponentProps) {
           <div className="mt-5 mb-10 h-[2px] w-14 bg-gradient-to-r from-brand-terracotta to-brand-gold" />
 
           <div className="space-y-5 font-body text-brand-charcoalLight leading-[1.8] text-[16px]">
-            <p className="about-page-text">
-              Elisa Ghion is a contact improvisation teacher and performer
-              based in Italy, dedicated to exploring the art of movement
-              dialogue between bodies. Her practice is rooted in deep
-              listening, shared weight, and the poetics of physical
-              conversation.
-            </p>
-            <p className="about-page-text">
-              With over a decade of experience in somatics, dance
-              improvisation, and movement research, Elisa creates spaces where
-              practitioners of all levels can discover the intelligence of the
-              body in relation to others and to gravity.
-            </p>
-            <p className="about-page-text">
-              Her teaching draws from contact improvisation, Body-Mind
-              Centering, and contemporary dance, weaving together technique
-              and creative exploration. She leads workshops and intensives
-              across Europe, fostering community through the shared language
-              of touch and movement.
-            </p>
-            <p className="about-page-text">
-              Elisa began her movement journey through contemporary dance in
-              Milan, later discovering contact improvisation during a workshop
-              in Berlin that changed her trajectory entirely. Since then she
-              has studied with teachers including Nancy Stark Smith, Nita
-              Little, Martin Keogh, and Kirstie Simson, deepening her
-              understanding of the form and its possibilities.
-            </p>
-            <p className="about-page-text">
-              Today she divides her time between teaching regular classes in
-              Milan, leading intensive workshops across Italy and Europe, and
-              her own movement research — an ongoing inquiry into how contact
-              improvisation can evolve as both an art form and a practice of
-              radical presence.
-            </p>
+            {(loaderData.aboutSettings.about_bio || defaultBio)
+              .split("\n\n")
+              .filter((p: string) => p.trim())
+              .map((paragraph: string, i: number) => (
+                <p key={i} className="about-page-text">{paragraph.trim()}</p>
+              ))}
           </div>
         </div>
       </div>
@@ -308,30 +300,15 @@ export default function AboutPage({ loaderData }: Route.ComponentProps) {
             </h2>
             <div className="mx-auto mb-8 h-[2px] w-14 bg-gradient-to-r from-brand-terracotta to-brand-gold" />
             <div className="space-y-5 font-body text-brand-charcoalLight leading-[1.9] text-[16px] text-left">
-              <p>
-                I believe that contact improvisation is learned through the body,
-                not explained to the mind. My classes create conditions for
-                discovery rather than delivering instructions — I offer scores,
-                invitations, and questions that guide you toward your own
-                experience.
-              </p>
-              <p>
-                Safety and consent are foundational. Every class begins with
-                clear agreements about touch, communication, and personal
-                boundaries. I want everyone in the room to feel empowered to say
-                yes, no, or not yet — and to know that each answer is equally
-                valued.
-              </p>
-              <p>
-                I teach from a place of ongoing learning. My practice is never
-                finished, and I share what I am currently exploring alongside
-                what I have integrated over the years. This keeps the work alive
-                and honest.
-              </p>
+              {(loaderData.aboutSettings.about_philosophy || defaultPhilosophy)
+                .split("\n\n")
+                .filter((p: string) => p.trim())
+                .map((paragraph: string, i: number) => (
+                  <p key={i}>{paragraph.trim()}</p>
+                ))}
             </div>
             <p className="mt-8 font-heading text-xl font-medium italic text-brand-charcoal leading-relaxed">
-              &ldquo;Contact improvisation is not just a dance form but a
-              practice of presence, trust, and radical togetherness.&rdquo;
+              &ldquo;{loaderData.aboutSettings.about_philosophy_quote || defaultPhilosophyQuote}&rdquo;
             </p>
           </div>
         </div>
