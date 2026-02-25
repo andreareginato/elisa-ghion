@@ -1,4 +1,4 @@
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, max } from "drizzle-orm";
 import { db } from "./index.server";
 import * as schema from "./schema";
 import type { Workshop, Testimonial } from "~/lib/workshop-utils";
@@ -80,6 +80,33 @@ export function getAllResearchAreas() {
 
 export function getAllVideos() {
   return db.select().from(schema.videos).orderBy(asc(schema.videos.sortOrder)).all();
+}
+
+// ── Max Sort Order helpers ────────────────────────────
+
+export function getMaxGallerySortOrder(): number {
+  const result = db.select({ max: max(schema.galleryItems.sortOrder) }).from(schema.galleryItems).get();
+  return result?.max ?? -1;
+}
+
+export function getMaxCollaborationSortOrder(): number {
+  const result = db.select({ max: max(schema.collaborations.sortOrder) }).from(schema.collaborations).get();
+  return result?.max ?? -1;
+}
+
+export function getMaxResearchSortOrder(): number {
+  const result = db.select({ max: max(schema.researchAreas.sortOrder) }).from(schema.researchAreas).get();
+  return result?.max ?? -1;
+}
+
+export function getMaxVideoSortOrder(): number {
+  const result = db.select({ max: max(schema.videos.sortOrder) }).from(schema.videos).get();
+  return result?.max ?? -1;
+}
+
+export function getMaxWorkshopSortOrder(): number {
+  const result = db.select({ max: max(schema.workshops.sortOrder) }).from(schema.workshops).get();
+  return result?.max ?? -1;
 }
 
 // ── CRUD: Workshops ────────────────────────────────────

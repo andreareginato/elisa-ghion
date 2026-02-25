@@ -82,3 +82,56 @@ html {
 .scroll-indicator {
   animation: scroll-bounce 2s ease-in-out infinite;
 }
+
+/* ─── Admin Panel Utilities ─── */
+@layer components {
+  .admin-card {
+    @apply bg-white rounded-xl border border-brand-sand p-6 shadow-sm;
+  }
+
+  .admin-input {
+    @apply w-full px-3 py-2 border border-brand-sand rounded-lg bg-white text-brand-charcoal placeholder-brand-warmGray focus:ring-2 focus:ring-brand-terracotta focus:border-transparent transition-colors;
+  }
+
+  .admin-label {
+    @apply block text-sm font-medium text-brand-charcoal mb-1;
+  }
+
+  .admin-btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-2.5 bg-brand-terracotta text-white font-medium rounded-lg hover:bg-brand-terracottaLight transition-colors focus:ring-2 focus:ring-brand-terracotta focus:ring-offset-2;
+  }
+
+  .admin-btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-2.5 bg-brand-sand text-brand-charcoal font-medium rounded-lg hover:bg-brand-sand/80 transition-colors focus:ring-2 focus:ring-brand-warmGray focus:ring-offset-2;
+  }
+}
+
+/* Admin toast animations */
+@keyframes toast-slide-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes toast-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.toast-enter {
+  animation: toast-slide-in 0.3s ease-out forwards;
+}
+.toast-exit {
+  animation: toast-fade-out 0.3s ease-in forwards;
+}
+
+/* Collapsible section */
+.collapsible-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+/* Admin image upload */
+.image-upload-zone {
+  @apply border-2 border-dashed border-brand-sand rounded-lg p-6 text-center cursor-pointer transition-colors hover:border-brand-terracotta/50 hover:bg-brand-cream/50;
+}
+.image-upload-zone.dragover {
+  @apply border-brand-terracotta bg-brand-cream;
+}

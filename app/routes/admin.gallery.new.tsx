@@ -1,161 +1,88 @@
 import { redirect } from "react-router";
 import { Form, Link } from "react-router";
 import type { Route } from "./+types/admin.gallery.new";
-import { insertGalleryItem } from "~/db/queries.server";
-import { saveUpload } from "~/lib/uploads.server";
+import { insertGalleryItem, getMaxGallerySortOrder } from "~/db/queries.server";
+import { saveUploadFromBuffer, getImageDimensions, suggestSpanFromDimensions } from "~/lib/uploads.server";
+import { setToast } from "~/lib/toast.server";
+import { AdminFormField } from "~/components/admin/AdminFormField";
+import { ImageUpload } from "~/components/admin/ImageUpload";
+import { GridSpanPicker } from "~/components/admin/GridSpanPicker";
+
+export const handle = { breadcrumb: "New Image" };
+
+const spanMap: Record<string, string> = {
+  "1x1": "md:col-span-1 md:row-span-1",
+  "2x1": "md:col-span-2 md:row-span-1",
+  "1x2": "md:col-span-1 md:row-span-2",
+  "2x2": "md:col-span-2 md:row-span-2",
+};
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
 
   const file = formData.get("image") as File;
-  const alt = formData.get("alt") as string;
-  const caption = formData.get("caption") as string;
-  const category = formData.get("category") as string;
-  const span = formData.get("span") as string;
-  const sortOrder = parseInt(formData.get("sortOrder") as string, 10);
+  if (!file || file.size === 0) throw new Error("Image file is required");
 
-  if (!file || file.size === 0) {
-    throw new Error("Image file is required");
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const src = saveUploadFromBuffer(buffer, file.name);
+  let spanValue = formData.get("span") as string;
+
+  // Auto-detect span from image dimensions if set to "auto"
+  if (!spanValue || spanValue === "auto") {
+    const dims = getImageDimensions(buffer);
+    spanValue = dims ? suggestSpanFromDimensions(dims.width, dims.height) : "1x1";
   }
-
-  const src = await saveUpload(file);
 
   await insertGalleryItem({
     src,
-    alt,
-    caption,
-    category,
-    span,
-    sortOrder,
+    alt: formData.get("alt") as string,
+    caption: formData.get("caption") as string,
+    category: formData.get("category") as string,
+    span: spanMap[spanValue] || spanValue,
+    sortOrder: getMaxGallerySortOrder() + 1,
   });
 
-  return redirect("/admin/gallery");
+  return redirect("/admin/gallery", {
+    headers: { "Set-Cookie": await setToast("Gallery image added!", "success") },
+  });
 }
 
 export default function NewGalleryItem() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">Add Gallery Image</h1>
-        <Link
-          to="/admin/gallery"
-          className="text-gray-600 hover:text-gray-900 transition-colors"
-        >
-          Back to Gallery
-        </Link>
-      </div>
+    <div className="max-w-2xl">
+      <h1 className="text-3xl font-heading font-bold text-brand-charcoal mb-6">Add Gallery Image</h1>
 
-      <div className="bg-white rounded-xl border p-6">
+      <div className="admin-card">
         <Form method="post" encType="multipart/form-data" className="space-y-6">
-          <div>
-            <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-2">
-              Image File *
-            </label>
-            <input
-              type="file"
-              id="image"
-              name="image"
-              accept="image/*"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-terracotta focus:border-transparent"
-            />
-          </div>
+          <AdminFormField label="Image" htmlFor="image" required>
+            <ImageUpload name="image" required />
+          </AdminFormField>
 
-          <div>
-            <label htmlFor="alt" className="block text-sm font-medium text-gray-700 mb-2">
-              Alt Text *
-            </label>
-            <input
-              type="text"
-              id="alt"
-              name="alt"
-              required
-              placeholder="Descriptive text for accessibility"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-terracotta focus:border-transparent"
-            />
-          </div>
+          <AdminFormField label="Alt Text" htmlFor="alt" required>
+            <input type="text" id="alt" name="alt" required placeholder="Descriptive text for accessibility" className="admin-input" />
+          </AdminFormField>
 
-          <div>
-            <label htmlFor="caption" className="block text-sm font-medium text-gray-700 mb-2">
-              Caption
-            </label>
-            <input
-              type="text"
-              id="caption"
-              name="caption"
-              placeholder="Optional caption text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-terracotta focus:border-transparent"
-            />
-          </div>
+          <AdminFormField label="Caption" htmlFor="caption">
+            <input type="text" id="caption" name="caption" placeholder="Optional caption text" className="admin-input" />
+          </AdminFormField>
 
-          <div>
-            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-              Category *
-            </label>
-            <select
-              id="category"
-              name="category"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-terracotta focus:border-transparent"
-            >
+          <AdminFormField label="Category" htmlFor="category" required>
+            <select id="category" name="category" required className="admin-input">
               <option value="">Select a category</option>
               <option value="workshops">Workshops</option>
               <option value="performances">Performances</option>
               <option value="jams">Jams</option>
               <option value="portraits">Portraits</option>
             </select>
-          </div>
+          </AdminFormField>
 
-          <div>
-            <label htmlFor="span" className="block text-sm font-medium text-gray-700 mb-2">
-              Grid Span *
-            </label>
-            <select
-              id="span"
-              name="span"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-terracotta focus:border-transparent"
-            >
-              <option value="">Select grid span</option>
-              <option value="md:col-span-1 md:row-span-1">1x1 (Standard)</option>
-              <option value="md:col-span-2 md:row-span-1">2x1 (Wide)</option>
-              <option value="md:col-span-1 md:row-span-2">1x2 (Tall)</option>
-              <option value="md:col-span-2 md:row-span-2">2x2 (Large)</option>
-            </select>
-          </div>
+          <AdminFormField label="Grid Span" required>
+            <GridSpanPicker name="span" />
+          </AdminFormField>
 
-          <div>
-            <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700 mb-2">
-              Sort Order *
-            </label>
-            <input
-              type="number"
-              id="sortOrder"
-              name="sortOrder"
-              required
-              defaultValue="0"
-              min="0"
-              placeholder="0"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-terracotta focus:border-transparent"
-            />
-            <p className="text-sm text-gray-500 mt-1">
-              Lower numbers appear first
-            </p>
-          </div>
-
-          <div className="flex gap-4 pt-4">
-            <button
-              type="submit"
-              className="bg-brand-terracotta text-white px-6 py-2 rounded-lg hover:bg-opacity-90 transition-colors"
-            >
-              Add Image
-            </button>
-            <Link
-              to="/admin/gallery"
-              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              Cancel
-            </Link>
+          <div className="flex gap-4 pt-4 border-t border-brand-sand">
+            <button type="submit" className="admin-btn-primary">Add Image</button>
+            <Link to="/admin/gallery" className="admin-btn-secondary">Cancel</Link>
           </div>
         </Form>
       </div>

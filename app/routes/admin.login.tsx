@@ -33,35 +33,40 @@ export default function AdminLogin() {
   const actionData = useActionData<typeof action>();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-brand-cream flex items-center justify-center px-4">
       <div className="max-w-sm w-full">
-        <h1 className="text-2xl font-bold text-gray-900 text-center mb-8">
-          Admin Login
-        </h1>
-        <Form method="post" className="space-y-4">
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              required
-              autoFocus
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-terracotta focus:border-transparent outline-none"
-            />
-          </div>
-          {actionData?.error && (
-            <p className="text-red-600 text-sm">{actionData.error}</p>
-          )}
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-brand-charcoal text-white rounded-lg hover:bg-brand-terracotta transition-colors"
-          >
-            Sign In
-          </button>
-        </Form>
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-heading font-bold text-brand-charcoal">
+            Elisa Ghion
+          </h1>
+          <p className="text-brand-warmGray mt-1">Admin Panel</p>
+        </div>
+        <div className="admin-card">
+          <Form method="post" className="space-y-4">
+            <div>
+              <label htmlFor="password" className="admin-label">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                autoFocus
+                className="admin-input"
+              />
+            </div>
+            {actionData?.error && (
+              <p className="text-red-600 text-sm">{actionData.error}</p>
+            )}
+            <button
+              type="submit"
+              className="w-full admin-btn-primary"
+            >
+              Sign In
+            </button>
+          </Form>
+        </div>
       </div>
     </div>
   );

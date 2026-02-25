@@ -1,155 +1,81 @@
 import { Form, redirect, Link } from "react-router";
 import type { Route } from "./+types/admin.collaborations.$id.edit";
 import { getCollaboration, updateCollaboration } from "~/db/queries.server";
+import { setToast } from "~/lib/toast.server";
+import { saveUpload } from "~/lib/uploads.server";
+import { AdminFormField } from "~/components/admin/AdminFormField";
+import { ImageUpload } from "~/components/admin/ImageUpload";
+
+export const handle = {
+  breadcrumb: (data: any) => `Edit "${data.collaboration.name}"`,
+};
 
 export async function loader({ params }: Route.LoaderArgs) {
   const collaboration = await getCollaboration(parseInt(params.id));
-
-  if (!collaboration) {
-    throw new Response("Not Found", { status: 404 });
-  }
-
+  if (!collaboration) throw new Response("Not Found", { status: 404 });
   return { collaboration };
 }
 
 export async function action({ request, params }: Route.ActionArgs) {
   const formData = await request.formData();
 
-  const data = {
-    name: formData.get("name") as string,
-    description: formData.get("description") as string,
-    initials: formData.get("initials") as string,
-    website: formData.get("website") as string,
-    category: formData.get("category") as "festival" | "organization" | "school",
-    image: formData.get("image") as string,
-    sortOrder: parseInt(formData.get("sortOrder") as string) || 0,
-  };
+  let image = formData.get("existingImage") as string;
+  const file = formData.get("image") as File;
+  if (file && file.size > 0) {
+    image = await saveUpload(file);
+  }
 
-  await updateCollaboration(parseInt(params.id), data);
-  return redirect("/admin/collaborations");
+  const name = formData.get("name") as string;
+  const initials = (formData.get("initials") as string) || name.slice(0, 2).toUpperCase();
+
+  await updateCollaboration(parseInt(params.id), {
+    name,
+    description: formData.get("description") as string,
+    initials,
+    website: formData.get("website") as string,
+    category: "organization",
+    image,
+  });
+
+  return redirect("/admin/collaborations", {
+    headers: { "Set-Cookie": await setToast("Collaboration updated!", "success") },
+  });
 }
 
 export default function EditCollaboration({ loaderData }: Route.ComponentProps) {
   const { collaboration } = loaderData;
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Edit Collaboration</h1>
+    <div className="max-w-2xl">
+      <h1 className="text-3xl font-heading font-bold text-brand-charcoal mb-6">Edit Collaboration</h1>
 
-      <div className="bg-white rounded-xl border p-6">
-        <Form method="post" className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              required
-              defaultValue={collaboration.name || ""}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terracotta"
-            />
-          </div>
+      <div className="admin-card">
+        <Form method="post" encType="multipart/form-data" className="space-y-4">
+          <input type="hidden" name="existingImage" value={collaboration.image || ""} />
 
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              rows={4}
-              defaultValue={collaboration.description || ""}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terracotta"
-            />
-          </div>
+          <AdminFormField label="Name" htmlFor="name" required>
+            <input type="text" id="name" name="name" required defaultValue={collaboration.name || ""} className="admin-input" />
+          </AdminFormField>
 
-          <div>
-            <label htmlFor="initials" className="block text-sm font-medium text-gray-700 mb-1">
-              Initials
-            </label>
-            <input
-              type="text"
-              id="initials"
-              name="initials"
-              defaultValue={collaboration.initials || ""}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terracotta"
-            />
-          </div>
+          <AdminFormField label="Description" htmlFor="description">
+            <textarea id="description" name="description" rows={4} defaultValue={collaboration.description || ""} className="admin-input" />
+          </AdminFormField>
 
-          <div>
-            <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-1">
-              Website
-            </label>
-            <input
-              type="url"
-              id="website"
-              name="website"
-              placeholder="https://example.com"
-              defaultValue={collaboration.website || ""}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terracotta"
-            />
-          </div>
+          <AdminFormField label="Initials" htmlFor="initials">
+            <input type="text" id="initials" name="initials" maxLength={3} placeholder="Auto-generated from name if empty" defaultValue={collaboration.initials || ""} className="admin-input" />
+          </AdminFormField>
 
-          <div>
-            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
-              Category
-            </label>
-            <select
-              id="category"
-              name="category"
-              required
-              defaultValue={collaboration.category || ""}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terracotta"
-            >
-              <option value="">Select a category</option>
-              <option value="festival">Festival</option>
-              <option value="organization">Organization</option>
-              <option value="school">School</option>
-            </select>
-          </div>
+          <AdminFormField label="Website" htmlFor="website">
+            <input type="url" id="website" name="website" placeholder="https://example.com" defaultValue={collaboration.website || ""} className="admin-input" />
+          </AdminFormField>
 
-          <div>
-            <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
-              Image Path
-            </label>
-            <input
-              type="text"
-              id="image"
-              name="image"
-              placeholder="/images/collaborations/example.jpg"
-              defaultValue={collaboration.image || ""}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terracotta"
-            />
-          </div>
+          <AdminFormField label="Image" htmlFor="image">
+            <ImageUpload name="image" currentSrc={collaboration.image || undefined} />
+          </AdminFormField>
 
-          <div>
-            <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700 mb-1">
-              Sort Order
-            </label>
-            <input
-              type="number"
-              id="sortOrder"
-              name="sortOrder"
-              defaultValue={collaboration.sortOrder || 0}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terracotta"
-            />
-          </div>
-
-          <div className="flex gap-4 pt-4">
-            <button
-              type="submit"
-              className="bg-brand-terracotta text-white px-6 py-2 rounded-lg hover:bg-brand-terracotta/90"
-            >
-              Update Collaboration
-            </button>
-            <Link
-              to="/admin/collaborations"
-              className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-            >
-              Cancel
-            </Link>
+          <div className="flex gap-4 pt-4 border-t border-brand-sand">
+            <button type="submit" className="admin-btn-primary">Update Collaboration</button>
+            <Link to="/admin/collaborations" className="admin-btn-secondary">Cancel</Link>
           </div>
         </Form>
       </div>
