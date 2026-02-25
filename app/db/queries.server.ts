@@ -1,7 +1,7 @@
 import { eq, asc, max } from "drizzle-orm";
 import { db } from "./index.server";
 import * as schema from "./schema";
-import type { Workshop, Testimonial } from "~/lib/workshop-utils";
+import type { Workshop } from "~/lib/workshop-utils";
 import type { GalleryItem } from "~/lib/gallery-utils";
 
 // ── Workshops ──────────────────────────────────────────

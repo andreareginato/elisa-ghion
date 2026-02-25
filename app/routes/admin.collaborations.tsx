@@ -6,7 +6,7 @@ import { SortableList } from "~/components/admin/SortableList";
 
 export const handle = { breadcrumb: "Collaborations" };
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader(_args: Route.LoaderArgs) {
   const collaborations = await getAllCollaborations();
   return { collaborations };
 }

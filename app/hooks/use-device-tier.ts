@@ -23,7 +23,7 @@ export function useDeviceTier(): DeviceTier {
         canvas.getContext("webgl2") || canvas.getContext("webgl")
       );
     } catch {
-      webglAvailable = false;
+      // WebGL not available
     }
 
     if (!webglAvailable) {

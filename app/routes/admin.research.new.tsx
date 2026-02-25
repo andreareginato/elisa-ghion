@@ -11,7 +11,7 @@ import { useState } from "react";
 
 export const handle = { breadcrumb: "New Research Area" };
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader(_args: Route.LoaderArgs) {
   const workshops = await getAllWorkshopsWithTestimonials();
   return { workshops };
 }

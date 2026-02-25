@@ -1,7 +1,6 @@
 import express from "express";
 import { createRequestHandler } from "@react-router/express";
 import { mkdirSync } from "fs";
-import { join } from "path";
 
 const PORT = process.env.PORT || 3000;
 const UPLOAD_DIR = process.env.UPLOAD_DIR || "./data/uploads";
@@ -10,6 +9,11 @@ const UPLOAD_DIR = process.env.UPLOAD_DIR || "./data/uploads";
 mkdirSync(UPLOAD_DIR, { recursive: true });
 
 const app = express();
+
+// Health check for Fly.io
+app.get("/healthcheck", (req, res) => {
+  res.status(200).send("OK");
+});
 
 // Serve static assets from the client build
 app.use(express.static("build/client", { maxAge: "1y", immutable: true }));
