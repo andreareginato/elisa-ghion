@@ -7,6 +7,7 @@ import { setToast } from "~/lib/toast.server";
 import { AdminFormField } from "~/components/admin/AdminFormField";
 import { ImageUpload } from "~/components/admin/ImageUpload";
 import { GridSpanPicker } from "~/components/admin/GridSpanPicker";
+import type { GalleryCategory } from "~/lib/gallery-utils";
 
 export const handle = {
   breadcrumb: (data: any) => `Edit "${data.item.alt}"`,
@@ -45,7 +46,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     src,
     alt: formData.get("alt") as string,
     caption: formData.get("caption") as string,
-    category: formData.get("category") as string,
+    category: formData.get("category") as GalleryCategory,
     span: spanMap[spanValue] || spanValue,
   });
 

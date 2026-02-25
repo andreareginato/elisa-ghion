@@ -25,7 +25,7 @@ const navItems = [
 ];
 
 export default function AdminLayout() {
-  const { toast } = useLoaderData<typeof loader>();
+  const { toast } = useLoaderData() as { toast: { message: string; type: "success" | "error" } | null };
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const sidebarContent = (

@@ -10,7 +10,8 @@ function serveUploads(): Plugin {
   return {
     name: "serve-uploads",
     configureServer(server) {
-      server.middlewares.use("/uploads", express.static(UPLOAD_DIR));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      server.middlewares.use("/uploads", express.static(UPLOAD_DIR) as any);
     },
   };
 }

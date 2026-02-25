@@ -10,6 +10,7 @@ import { CollapsibleSection } from "~/components/admin/CollapsibleSection";
 import { ContentPreview } from "~/components/admin/ContentPreview";
 import type { Route } from "./+types/admin.workshops.$id.edit";
 import { useState } from "react";
+import type { Workshop } from "~/lib/workshop-utils";
 
 export const handle = {
   breadcrumb: (data: any) => `Edit "${data.workshop.title}"`,
@@ -48,7 +49,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   await updateWorkshop(params.id, {
     title, subtitle, description, longDescription, highlights,
     startDate, endDate: endDate || undefined, dates, location, externalUrl,
-    image, format, schedule: schedule || undefined, period: period || undefined,
+    image, format: format as Workshop["format"], schedule: schedule || undefined, period: period || undefined,
   });
 
   await deleteTestimonialsByWorkshop(params.id);
@@ -58,7 +59,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     const name = formData.get(`testimonial_name_${i}`) as string;
     const year = formData.get(`testimonial_year_${i}`) as string;
     if (quote && name) {
-      await insertTestimonial({ workshopId: params.id, quote, name, year: year || undefined });
+      await insertTestimonial({ workshopId: params.id, quote, name, year: year || "" });
     }
   }
 

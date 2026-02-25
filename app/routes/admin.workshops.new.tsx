@@ -10,6 +10,7 @@ import { CollapsibleSection } from "~/components/admin/CollapsibleSection";
 import { ContentPreview } from "~/components/admin/ContentPreview";
 import type { Route } from "./+types/admin.workshops.new";
 import { useState } from "react";
+import type { Workshop } from "~/lib/workshop-utils";
 
 export const handle = { breadcrumb: "New Workshop" };
 
@@ -46,7 +47,7 @@ export async function action({ request }: Route.ActionArgs) {
   await insertWorkshop({
     id, title, subtitle, description, longDescription, highlights,
     startDate, endDate: endDate || undefined, dates, location, externalUrl,
-    image, format, schedule: schedule || undefined, period: period || undefined, sortOrder,
+    image, format: format as Workshop["format"], schedule: schedule || undefined, period: period || undefined, sortOrder,
   });
 
   const testimonialCount = parseInt(formData.get("testimonialCount") as string) || 0;
@@ -55,7 +56,7 @@ export async function action({ request }: Route.ActionArgs) {
     const name = formData.get(`testimonial_name_${i}`) as string;
     const year = formData.get(`testimonial_year_${i}`) as string;
     if (quote && name) {
-      await insertTestimonial({ workshopId: id, quote, name, year: year || undefined });
+      await insertTestimonial({ workshopId: id, quote, name, year: year || "" });
     }
   }
 
